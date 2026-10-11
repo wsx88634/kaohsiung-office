@@ -22,26 +22,25 @@
     }
     .zone-hotspot:hover {
       transform: translate(-50%, -50%) scale(1.15);
-      z-index: 30;
+      z-index: 35;
     }
     .zone-hotspot.active {
-      transform: translate(-50%, -50%) scale(1.22);
+      transform: translate(-50%, -50%) scale(1.25);
       z-index: 40;
     }
     .zone-hotspot.active .hotspot-ring {
-      box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.4), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.45), 0 12px 25px -4px rgba(0, 0, 0, 0.35);
     }
 
     .pulse-effect {
       animation: pulse-ring 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
     @keyframes pulse-ring {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.35); opacity: 0; }
+      0% { transform: scale(0.95); opacity: 0.85; }
+      50% { transform: scale(1.4); opacity: 0; }
       100% { transform: scale(0.95); opacity: 0; }
     }
 
-    /* 隱藏原生捲軸但保留滾動 */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -58,7 +57,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
 
-  <!-- 頂部精簡導覽列 -->
+  <!-- 頂部導覽列 -->
   <header class="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
     <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
       <div class="flex items-center space-x-3">
@@ -68,14 +67,13 @@
         <div>
           <h1 class="text-sm sm:text-base font-bold flex items-center gap-2">
             空間位置規劃與現場實景討論
-            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">平面圖 ⇄ 照片互動</span>
+            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">依整理編號對應</span>
           </h1>
         </div>
       </div>
 
-      <!-- 快速切換標籤 -->
       <div class="flex items-center space-x-2">
-        <span class="text-xs text-slate-400 hidden lg:inline">點擊圖面或按鈕切換區域：</span>
+        <span class="text-xs text-slate-400 hidden lg:inline">點擊圖面編號或下方按鈕即時切換照片：</span>
         <button onclick="window.print()" class="no-print inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition border border-slate-700">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
           列印
@@ -83,28 +81,28 @@
       </div>
     </div>
 
-    <!-- 區域按鈕列 -->
-    <div class="bg-slate-800/90 border-t border-slate-700/80 px-4 py-2 overflow-x-auto no-scrollbar flex items-center gap-1.5 text-xs">
+    <!-- 依使用者資料夾命名之 1~7 區域快捷列 -->
+    <div class="bg-slate-800 border-t border-slate-700 px-4 py-2 overflow-x-auto no-scrollbar flex items-center gap-1.5 text-xs">
       <button onclick="setZone('kitchen')" id="nav-kitchen" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-sky-600 text-white shadow">
-        <span>🍽️</span> 1. 展示體驗廚房（中島區）
+        <span>🍽️</span> 1. 展示廚房區 (3張)
       </button>
       <button onclick="setZone('office')" id="nav-office" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>💼</span> 2. 辦公多功能會議室
+        <span>💼</span> 2. 多功能會議區 (4張)
       </button>
       <button onclick="setZone('repair')" id="nav-repair" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>🔧</span> 3. 專業設備維修室（原茶水間）
+        <span>🔧</span> 3. 維修室區 (4張)
       </button>
-      <button onclick="setZone('warehouse')" id="nav-warehouse" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>📦</span> 4. 倉儲物流備品庫（活用空間）
+      <button onclick="setZone('flex')" id="nav-flex" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>📐</span> 4. 活用空間 (4張)
       </button>
       <button onclick="setZone('entrance')" id="nav-entrance" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>🚪</span> 5. 門面騎樓與進出口
+        <span>🚪</span> 5. 大門戶外區 (2張)
       </button>
-      <button onclick="setZone('corridor')" id="nav-corridor" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>🚶</span> 6. 中央過渡走廊
+      <button onclick="setZone('storage')" id="nav-storage" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>📦</span> 6. 倉儲區 (5張)
       </button>
       <button onclick="setZone('backyard')" id="nav-backyard" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
-        <span>🌿</span> 7. 後陽台天井（通風外機）
+        <span>🌿</span> 7. 後陽台區 (2張)
       </button>
     </div>
   </header>
@@ -117,9 +115,9 @@
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
-          <h2 class="text-sm font-bold text-slate-800">設計師平面圖 (30坪格局)</h2>
+          <h2 class="text-sm font-bold text-slate-800">設計師平面圖 (點擊號碼標籤切換)</h2>
         </div>
-        <span class="text-[11px] text-slate-600 font-medium">點擊圖面標籤切換</span>
+        <span class="text-[11px] text-slate-500 font-medium">共 7 大對應區域</span>
       </div>
 
       <!-- 圖面容器 -->
@@ -127,72 +125,80 @@
         <div class="relative w-full max-w-[500px]">
           <img src="./assets/floor_plan.jpg" alt="平面圖" id="main-plan-img" class="w-full h-auto object-contain block rounded-lg select-none">
 
-          <!-- 1. 展示體驗廚房 (右前架高地板) -->
-          <div onclick="setZone('kitchen')" id="pin-kitchen" style="top: 61%; left: 63%;" class="zone-hotspot active group" title="展示體驗廚房">
+          <!-- 1. 展示廚房區 (右前架高地板) -->
+          <div onclick="setZone('kitchen')" id="pin-kitchen" style="top: 61%; left: 63%;" class="zone-hotspot active group" title="1-展示廚房區">
             <span class="pulse-effect absolute inset-0 rounded-full bg-sky-500"></span>
             <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-sky-600 text-white font-black text-xs border-2 border-white shadow-lg">
               1
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
-              展示廚房
+              1. 展示廚房
             </div>
           </div>
 
-          <!-- 2. 辦公多功能會議室 (左前多功能空間) -->
-          <div onclick="setZone('office')" id="pin-office" style="top: 67%; left: 33%;" class="zone-hotspot group" title="辦公多功能會議室">
+          <!-- 2. 多功能會議區 (左前多功能空間) -->
+          <div onclick="setZone('office')" id="pin-office" style="top: 67%; left: 33%;" class="zone-hotspot group" title="2-多功能會議區">
             <span class="pulse-effect absolute inset-0 rounded-full bg-indigo-500"></span>
             <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs border-2 border-white shadow-lg">
               2
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
-              會議辦公
+              2. 會議區
             </div>
           </div>
 
-          <!-- 3. 專業設備維修室 (左後原茶水間) -->
-          <div onclick="setZone('repair')" id="pin-repair" style="top: 22%; left: 32%;" class="zone-hotspot group" title="專業設備維修室">
+          <!-- 3. 維修室區 (左後原茶水間/作業區) -->
+          <div onclick="setZone('repair')" id="pin-repair" style="top: 22%; left: 32%;" class="zone-hotspot group" title="3-維修室區">
             <span class="pulse-effect absolute inset-0 rounded-full bg-amber-500"></span>
             <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-amber-600 text-white font-black text-xs border-2 border-white shadow-lg">
               3
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
-              設備維修室
+              3. 維修室區
             </div>
           </div>
 
-          <!-- 4. 倉儲物流備品庫 (右後活用空間) -->
-          <div onclick="setZone('warehouse')" id="pin-warehouse" style="top: 27%; left: 65%;" class="zone-hotspot group" title="倉儲物流備品庫">
+          <!-- 4. 活用空間 (右後活用空間) -->
+          <div onclick="setZone('flex')" id="pin-flex" style="top: 27%; left: 65%;" class="zone-hotspot group" title="4-活用空間">
             <span class="pulse-effect absolute inset-0 rounded-full bg-emerald-500"></span>
             <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs border-2 border-white shadow-lg">
               4
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
-              倉儲庫房
+              4. 活用空間
             </div>
           </div>
 
-          <!-- 5. 門面騎樓與進出口 -->
-          <div onclick="setZone('entrance')" id="pin-entrance" style="top: 84%; left: 70%;" class="zone-hotspot group" title="門面騎樓與進出口">
+          <!-- 5. 大門戶外區 (進門口) -->
+          <div onclick="setZone('entrance')" id="pin-entrance" style="top: 84%; left: 70%;" class="zone-hotspot group" title="5-大門戶外區">
             <span class="pulse-effect absolute inset-0 rounded-full bg-rose-500"></span>
             <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-rose-600 text-white font-black text-xs border-2 border-white shadow-lg">
               5
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
-              門面進口
+              5. 大門戶外
             </div>
           </div>
 
-          <!-- 6. 中央過渡走廊 -->
-          <div onclick="setZone('corridor')" id="pin-corridor" style="top: 45%; left: 38%;" class="zone-hotspot group" title="中央過渡走廊">
-            <div class="hotspot-ring relative flex items-center justify-center w-7 h-7 rounded-full bg-slate-700 text-white font-bold text-[11px] border-2 border-white shadow">
+          <!-- 6. 倉儲區 (中央走道儲物收納櫃) -->
+          <div onclick="setZone('storage')" id="pin-storage" style="top: 45%; left: 38%;" class="zone-hotspot group" title="6-倉儲區">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-purple-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-purple-600 text-white font-black text-xs border-2 border-white shadow-lg">
               6
             </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              6. 倉儲區
+            </div>
           </div>
 
-          <!-- 7. 後陽台天井 -->
-          <div onclick="setZone('backyard')" id="pin-backyard" style="top: 10%; left: 35%;" class="zone-hotspot group" title="後陽台天井">
-            <div class="hotspot-ring relative flex items-center justify-center w-7 h-7 rounded-full bg-teal-600 text-white font-bold text-[11px] border-2 border-white shadow">
+          <!-- 7. 後陽台區 (最上方通風天井) -->
+          <div onclick="setZone('backyard')" id="pin-backyard" style="top: 10%; left: 35%;" class="zone-hotspot group" title="7-後陽台區">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-teal-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-teal-600 text-white font-black text-xs border-2 border-white shadow-lg">
               7
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              7. 後陽台區
             </div>
           </div>
 
@@ -200,22 +206,22 @@
       </div>
 
       <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
-        <span>面寬 8.6 米 × 縱深 14.2 米</span>
-        <span class="font-medium text-sky-700">點擊熱點可聯動右側照片</span>
+        <span>實際空間約 30 坪</span>
+        <span class="font-medium text-sky-700">點擊熱點即時更新右側照片</span>
       </div>
     </div>
 
-    <!-- 右欄：該區現場照片牆與位置規劃討論 (佔 7 欄) -->
+    <!-- 右欄：現場照片牆與位置規劃討論 (佔 7 欄) -->
     <div class="lg:col-span-7 space-y-4">
 
-      <!-- 區塊標題與資訊卡 -->
+      <!-- 區塊標題卡 -->
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
             <span id="zone-icon" class="text-2xl">🍽️</span>
             <div>
-              <h3 id="zone-title" class="text-xl font-black text-slate-900">1. 展示體驗廚房（Demo Kitchen）</h3>
-              <p id="zone-location" class="text-xs text-slate-500 font-medium mt-0.5">位置：入門右側架高地板區｜約 9.6 坪</p>
+              <h3 id="zone-title" class="text-xl font-black text-slate-900">1-展示廚房區</h3>
+              <p id="zone-location" class="text-xs text-slate-500 font-medium mt-0.5">對應位置：進門右側架高地板區（中島吧台＋廚具設備展示櫃）</p>
             </div>
           </div>
           <span id="zone-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
@@ -224,7 +230,7 @@
         </div>
 
         <p id="zone-summary" class="text-xs sm:text-sm text-slate-700 mt-3 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
-          進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示櫃，用於 RATIONAL 蒸烤箱、Pacojet 等設備的實機料理展演與 VIP 客戶試菜。
+          進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示櫃，用於蒸烤箱、調理設備的實機料理展演與貴賓試菜。
         </p>
       </div>
 
@@ -232,12 +238,12 @@
       <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
         <div class="flex items-center justify-between mb-3.5">
           <div class="flex items-center gap-2">
-            <h4 class="text-sm font-bold text-slate-800">📸 該區域現場實勘照片</h4>
-            <span id="photo-count-badge" class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-xs font-semibold">5 張照片</span>
+            <h4 class="text-sm font-bold text-slate-800">📸 現場實勘對應照片</h4>
+            <span id="photo-count-badge" class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-xs font-semibold">3 張照片</span>
           </div>
           <span class="text-xs text-sky-600 font-medium flex items-center gap-1">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
-            點擊照片可放大討論
+            點擊照片即可全螢幕放大討論
           </span>
         </div>
 
@@ -271,7 +277,7 @@
       <div class="px-4 py-3 bg-slate-900/90 text-white flex items-center justify-between border-b border-slate-800">
         <div>
           <h5 id="lightbox-title" class="font-bold text-sm text-slate-200">現場照片放大檢視</h5>
-          <span id="lightbox-counter" class="text-[11px] text-slate-400">1 / 5</span>
+          <span id="lightbox-counter" class="text-[11px] text-slate-400">1 / 3</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-[11px] text-slate-400 hidden sm:inline">可用鍵盤 ← → 切換，ESC 關閉</span>
@@ -303,7 +309,7 @@
     </div>
   </div>
 
-  <!-- 資料庫與互動邏輯腳本 -->
+  <!-- 資料庫與互動邏輯腳本（嚴格對齊使用者的資料夾分類） -->
   <script>
     const zonesData = {
       kitchen: {
@@ -311,16 +317,14 @@
         navId: 'nav-kitchen',
         pinId: 'pin-kitchen',
         icon: '🍽️',
-        title: '1. 展示體驗廚房（Demo Kitchen）',
-        location: '位置：入門右側架高地板區｜約 9.6 坪',
+        title: '1-展示廚房區',
+        location: '對應位置：進門右側架高地板區（斜角中島＋廚具設備展示櫃）',
         tag: '核心視覺亮點',
-        summary: '進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示高櫃，用於商用萬能蒸烤箱 (RATIONAL iCombi Pro)、微磨機 (Pacojet 4)、急速冷凍櫃等設備的料理展演與客戶試吃。',
+        summary: '進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示高櫃，用於商用萬能蒸烤箱 (RATIONAL iCombi Pro)、微磨機 (Pacojet 4)、急速冷凍櫃等設備的實機料理演示與客戶試吃。',
         photos: [
-          { src: './assets/site_photos/316073_0.jpg', title: '前展區全景（中島吧台預定地）', desc: '現況天花板高挑平整，地面為木紋塑膠地板。兩側為通訊行舊矮櫃，中央可見箱裝設備。' },
-          { src: './assets/site_photos/316544_0.jpg', title: '右側長達 6 米展示背牆', desc: '原手機配件凹槽板背牆。設計師規劃為「廚具設備展示高櫃」，放置蒸烤箱與嵌入式設備。' },
-          { src: './assets/site_photos/316535_0.jpg', title: '大門右側配電箱與展示櫃現況', desc: '進門右壁為主要配電箱，通往中島與設備高櫃之重電走線極短，非常省工程線材！' },
-          { src: './assets/site_photos/316542_0.jpg', title: '展示櫃深處與天花板燈口', desc: '天花板已有盒燈與嵌燈孔位，拆除舊櫃後可加裝軌道投射燈照射料理中島。' },
-          { src: './assets/site_photos/316099_0.jpg', title: '展示區銜接中央走廊處', desc: '右側展示櫃延伸至後方走道入口，動線開闊，客戶可環繞中島參觀。' }
+          { src: './assets/site_photos/316073_0.jpg', name: '316073_0.jpg', title: '前展區全景（展示中島預定地）', desc: '現況天花板高挑平整，地面為木紋塑膠地板。兩側為通訊行舊矮櫃，中央可見箱裝設備。' },
+          { src: './assets/site_photos/316075_0.jpg', name: '316075_0.jpg', title: '前展區回望大門採光視角', desc: '進門右側大面落地窗採光充足，中島吧台設在此處能吸引騎樓路人與客戶目光。' },
+          { src: './assets/site_photos/316535_0.jpg', name: '316535_0.jpg', title: '大門右側配電箱與展示櫃牆', desc: '進門右壁為主要配電箱，通往中島與設備高櫃之重電走線極短，非常省工程線材！' }
         ],
         discussions: [
           '🎯 <strong>位置優勢</strong>：緊鄰正面大落地窗，從騎樓一眼就能看到精緻的中島料理展演，品牌吸睛效果極強。',
@@ -333,15 +337,15 @@
         navId: 'nav-office',
         pinId: 'pin-office',
         icon: '💼',
-        title: '2. 辦公與多功能會議室（Office & Meeting）',
-        location: '位置：入門左側多功能區｜約 7.5 坪',
-        tag: '商務談判・內部辦公',
-        summary: '作為業務簽約、內部會議、遠端視訊與日常辦公的核心空間。設計師規劃 6-8 人會議長桌與深處獨立辦公桌，搭配文件展示收納櫃。',
+        title: '2-多功能會議區',
+        location: '對應位置：進門左側多功能空間（會議大桌＋辦公桌＋展示櫃）',
+        tag: '商務談判・內部研討',
+        summary: '作為業務簽約、內部會議、遠端視訊與日常行政辦公的核心空間。設計師規劃 6-8 人會議長桌與深處獨立辦公桌，搭配整面落地文件展示收納櫃。',
         photos: [
-          { src: './assets/site_photos/316075_0.jpg', title: '前區望向大門採光（會議桌預定位）', desc: '大門左側空間，自然採光充足，地坪平整，適合作為接待大桌與會議簡報區。' },
-          { src: './assets/site_photos/316074_0.jpg', title: '前區左側與中島過渡視角', desc: '空間左右分流清晰，左邊洽談、右邊烹飪，中間保持開闊動線。' },
-          { src: './assets/site_photos/316547_0.jpg', title: '左側深處辦公桌預定區', desc: '靠近電梯間牆面，環境相對安靜，適合作為主管與行政同仁日常辦公工位。' },
-          { src: './assets/site_photos/316085_0.jpg', title: '左側收納展示櫃現況', desc: '壁面可規劃落地資料櫃與 75 吋簡報顯示器投影牆。' }
+          { src: './assets/site_photos/316072_0.jpg', name: '316072_0.jpg', title: '門口騎樓側景望向會議區', desc: '會議區面朝門口採光面，動線流暢，客戶到訪能第一時間引導入座。' },
+          { src: './assets/site_photos/316074_0.jpg', name: '316074_0.jpg', title: '多功能會議桌預定位全景', desc: '空間左右分流清晰，左邊會議商談、右邊烹飪展示，中留 1.5 米大走道。' },
+          { src: './assets/site_photos/316542_0.jpg', name: '316542_0.jpg', title: '壁面收納高櫃與天花板嵌燈', desc: '既有天花板已有盒燈與嵌燈孔位，拆除舊櫃後可加裝軌道燈與落地文件收納高櫃。' },
+          { src: './assets/site_photos/316544_0.jpg', name: '316544_0.jpg', title: '長達 6 米展示櫃與會議空間背牆', desc: '大面積背牆可改裝為形象展示牆與 75 吋簡報顯示器投影壁面。' }
         ],
         discussions: [
           '🎯 <strong>位置優勢</strong>：與展示廚房左右分立，進門客戶自然分流，商談與烹飪互不卡位。',
@@ -354,15 +358,15 @@
         navId: 'nav-repair',
         pinId: 'pin-repair',
         icon: '🔧',
-        title: '3. 專業設備維修室（Service Workshop）',
-        location: '位置：後方左側獨立房間（原茶水間）｜約 5.4 坪',
+        title: '3-維修室區',
+        location: '對應位置：後方左側獨立房間（原圖標為儲物作業區兼茶水間）',
         tag: '技術核心・售後保修',
-        summary: '原設計圖標為「儲物茶水間」，但此處有排水孔、對外窗通風門，且緊鄰獨立衛浴與後陽台。阿噗強烈建議將此處定為「專業維修室」，具備實體門可關閉，雜亂不外露。',
+        summary: '專業餐飲設備的售後維修核心！圖面上此處標有「排水孔」，旁邊緊鄰獨立衛浴與後陽台。阿噗強烈建議將此處定為「專業維修室」，具備實體門可關閉，雜亂不外露。',
         photos: [
-          { src: './assets/site_photos/316551_0.jpg', title: '維修室獨立空間全景', desc: '方正獨立隔間，地磚乾淨。左側有專用衛浴門，正前方有採光窗與通往後陽台鋁門。' },
-          { src: './assets/site_photos/316059_0.jpg', title: '現成給排水孔與排氣窗', desc: '地面有排水孔與水龍頭，正是測試機器漏水、清洗零件油污的絕佳天然條件！' },
-          { src: './assets/site_photos/316553_0.jpg', title: '維修室專屬獨立衛生間', desc: '技師清洗雙手、更換工作服便利，免去跑到公共區域。' },
-          { src: './assets/site_photos/316554_0.jpg', title: '通往後陽台採光通風門', desc: '可將空壓機主機放置於後陽台，高壓氣管穿牆進入室內，室內無噪音！' }
+          { src: './assets/site_photos/316548_0.jpg', name: '316548_0.jpg', title: '維修作業室內部格局', desc: '方正獨立空間，地坪為乾淨石英磚，有實體門可關閉，雜亂與零件不外露。' },
+          { src: './assets/site_photos/316551_0.jpg', name: '316551_0.jpg', title: '採光窗、鋁門直通後陽台與地排水位', desc: '地面具備排水孔與水龍頭，正是測試機器漏水、清洗零件油污的絕佳天然條件！' },
+          { src: './assets/site_photos/316553_0.jpg', name: '316553_0.jpg', title: '維修室專屬獨立衛生間', desc: '技師清洗雙手、更換工作服便利，免去跑到公共區域。' },
+          { src: './assets/site_photos/316554_0.jpg', name: '316554_0.jpg', title: '通往後陽台防火巷通風採光門扇', desc: '可將空壓機主機放置於後陽台，高壓氣管穿牆進入室內，室內無噪音！' }
         ],
         discussions: [
           '🎯 <strong>為什麼落位在此？</strong>：維修拆機難免有零件雜物、工具敲擊聲與油水污漬。放在後方獨立房間並有門可關，徹底保障前台專業形象！',
@@ -370,24 +374,24 @@
           '🗣️ <strong>建議討論重點</strong>：在此房內配置多電壓綜合測試配電盤（110V / 220V / 380V），並拉一組氣管通到工作台。'
         ]
       },
-      warehouse: {
-        id: 'warehouse',
-        navId: 'nav-warehouse',
-        pinId: 'pin-warehouse',
-        icon: '📦',
-        title: '4. 倉儲物流備品庫（Storage Warehouse）',
-        location: '位置：後方右側獨立活用空間｜約 7.5 坪',
-        tag: '後勤樞紐・整機備品',
-        summary: '原設計圖標為「活用空間」，縱深達 6.2 米，非常深長方正。規劃為整機設備庫存、原廠維修零件儲備與出貨打包區。',
+      flex: {
+        id: 'flex',
+        navId: 'nav-flex',
+        pinId: 'pin-flex',
+        icon: '📐',
+        title: '4-活用空間',
+        location: '對應位置：後方右側長型房間（3760 × 6190 mm，縱深達 6.2 米）',
+        tag: '彈性規劃・深度大容量',
+        summary: '設計師圖面標註之「活用空間」，長達 6.2 米，非常方正深邃。可靈活作為整機倉儲、備品展示庫、培訓教室或第二辦公室。',
         photos: [
-          { src: './assets/site_photos/316548_0.jpg', title: '活用空間全景（縱深長達 6.2 米）', desc: '方正深邃，採光通風良好，地坪為耐磨石英磚，耐重性佳。' },
-          { src: './assets/site_photos/316552_0.jpg', title: '庫房角落與通風窗', desc: '原有木作衣櫃清空後，可整排沿牆架設 2.1 米高免螺絲重型角鋼貨架。' },
-          { src: './assets/site_photos/316077_0.jpg', title: '內部既有高櫃現況', desc: '現有木櫃拆除清空後，將可釋放出極大立方收納容積。' }
+          { src: './assets/site_photos/316059_0.jpg', name: '316059_0.jpg', title: '活用空間對外採光窗與通風門', desc: '通風良好，採光充足，牆面平整乾淨。' },
+          { src: './assets/site_photos/316076_0.jpg', name: '316076_0.jpg', title: '活用空間進門視角', desc: '空間深邃，門口開闊，適合規劃整排高層貨架或辦公培訓長桌。' },
+          { src: './assets/site_photos/316077_0.jpg', name: '316077_0.jpg', title: '內部既有高身衣櫃現況', desc: '現有舊木櫃拆除清空後，將可釋放出極大立方收納容積。' },
+          { src: './assets/site_photos/316085_0.jpg', name: '316085_0.jpg', title: '空間採光與地磚現況', desc: '地坪為耐磨石英磚，耐重性佳，適合放置重型機台設備。' }
         ],
         discussions: [
-          '🎯 <strong>位置優勢</strong>：長條形空間適合規劃「U 型貨架動線」，兩側放貨架，中間保留 1.2 米拖車走道。',
-          '⚖️ <strong>載重與收納</strong>：配置 4 組單層耐重 300kg 的重型角鋼貨架，搭配抽屜式零件盒收納精密電控板與加熱管。',
-          '🗣️ <strong>建議討論重點（關鍵！）</strong>：商用烤箱打木箱後寬度常達 85-90cm，<strong>倉庫門框淨寬必須要求設計師維持 95cm 以上</strong>，且全室地面不可有門檻！'
+          '🎯 <strong>規劃方向建議</strong>：縱深達 6.2 米，最適合規劃為「U 型重型角鋼貨架庫房」或「設備備品展示室」。',
+          '🚪 <strong>尺寸防呆（關鍵！）</strong>：商用烤箱打木箱後寬度常達 85-90cm，<strong>此房門框淨寬必須要求設計師維持 95cm 以上</strong>，且全室地面不可有門檻！'
         ]
       },
       entrance: {
@@ -395,15 +399,13 @@
         navId: 'nav-entrance',
         pinId: 'pin-entrance',
         icon: '🚪',
-        title: '5. 門面騎樓與進出口（Main Entrance）',
-        location: '位置：臨路一樓店面・正面寬 8.6 米',
+        title: '5-大門戶外區',
+        location: '對應位置：正面臨路騎樓與一樓雙鐵捲門進出口',
         tag: '第一門面・進出動線',
-        summary: '氣派臨路店面，雙鐵捲門與落地清玻璃帷幕。門前騎樓可臨停貨車裝卸大件設備，亦為客戶到訪第一印象。',
+        summary: '氣派臨路店面，雙鐵捲門與落地清玻璃帷幕。正面寬達 8.6 米，門前騎樓可臨停貨車裝卸大件設備，為客戶到訪第一印象。',
         photos: [
-          { src: './assets/site_photos/316070_0.jpg', title: '臨路一樓門面全貌', desc: '正面寬闊雙門面，二樓有橫式廣告鐵架，可更換全新企業形象招牌。' },
-          { src: './assets/site_photos/316071_0.jpg', title: '深邃騎樓與落地大玻璃', desc: '大面清玻璃透光度極高，行人從騎樓即可直視內部精緻的廚藝展示中島。' },
-          { src: './assets/site_photos/316072_0.jpg', title: '門口騎樓側景', desc: '門前地磚平整，有利於油壓板車與推車直接推進室內。' },
-          { src: './assets/site_photos/316076_0.jpg', title: '進門自動門與雙捲門現況', desc: '原有鐵捲門與鋁框玻璃門狀態良好，清洗翻新即可繼續沿用。' }
+          { src: './assets/site_photos/316070_0.jpg', name: '316070_0.jpg', title: '臨路一樓店面全貌（雙店面面寬）', desc: '正面寬闊雙門面，二樓有橫式廣告鐵架，可更換全新企業形象發光招牌。門前可供貨車臨停裝卸。' },
+          { src: './assets/site_photos/316071_0.jpg', name: '316071_0.jpg', title: '深邃騎樓與落地大玻璃帷幕', desc: '大面清玻璃透光度極高，行人從騎樓即可直視內部精緻的廚藝展示中島與品牌形象牆。' }
         ],
         discussions: [
           '🎯 <strong>位置優勢</strong>：雙門面氣派大器，透光性極佳，自然採光能大幅提升展示質感。',
@@ -411,21 +413,24 @@
           '🗣️ <strong>建議討論重點</strong>：二樓既有廣告鐵架可直接換裝耐候 LED 發光字形象招牌；玻璃門加裝門禁刷卡機。'
         ]
       },
-      corridor: {
-        id: 'corridor',
-        navId: 'nav-corridor',
-        pinId: 'pin-corridor',
-        icon: '🚶',
-        title: '6. 中央過渡走廊（Central Corridor）',
-        location: '位置：前後區樞紐通道｜貫穿展區與後勤區',
-        tag: '物流通道・前後樞紐',
-        summary: '連接前台展示區與後台維修倉儲區的動線命脈。走道地坪鋪設耐磨拋光石英磚，上方設有洗手間標示。',
+      storage: {
+        id: 'storage',
+        navId: 'nav-storage',
+        pinId: 'pin-storage',
+        icon: '📦',
+        title: '6-倉儲區',
+        location: '對應位置：中央過渡走廊及兩側儲物收納櫃區',
+        tag: '樞紐通道・收納整裝',
+        summary: '貫穿前台展示與後台維修的動線核心。設計師在走廊兩側規劃了大面積「儲物收納櫃」，地坪鋪設耐磨拋光石英磚，為油壓推車搬運與耗材備料的儲運區。',
         photos: [
-          { src: './assets/site_photos/316100_0.jpg', title: '中央走廊入口視角', desc: '從展區望向後勤區入口，地面為堅固拋光磚，上方為洗手間燈箱。' },
-          { src: './assets/site_photos/316101_0.jpg', title: '走廊中段過渡區', desc: '左側通往維修室與茶水間，右側通往倉庫，兩側預留收納櫃空間。' }
+          { src: './assets/site_photos/316099_0.jpg', name: '316099_0.jpg', title: '倉儲區入口與前展區交界', desc: '從展區望向後勤區入口，動線筆直順暢。' },
+          { src: './assets/site_photos/316100_0.jpg', name: '316100_0.jpg', title: '中央走道入口（洗手間標示與石英磚）', desc: '走道地磚為耐重拋光磚，上方為既有洗手間燈箱。' },
+          { src: './assets/site_photos/316101_0.jpg', name: '316101_0.jpg', title: '走道中段（通往維修室與活用空間）', desc: '前後區過渡樞紐，兩側牆面預留整面嵌入式儲物收納櫃。' },
+          { src: './assets/site_photos/316547_0.jpg', name: '316547_0.jpg', title: '走道側邊收納儲物空間', desc: '可配置高密度原廠零件抽屜櫃，方便快速取用常用維修零件。' },
+          { src: './assets/site_photos/316552_0.jpg', name: '316552_0.jpg', title: '走道內部通風與地坪現況', desc: '平整無落差地坪，利於台車順暢推運。' }
         ],
         discussions: [
-          '⚠️ <strong>尺寸防呆（老闆必看）</strong>：此通道是所有大件設備由大門推入倉庫的唯一通道，<strong>走廊淨寬必須保持 100cm 以上</strong>。',
+          '⚠️ <strong>尺寸防呆（老闆必看）</strong>：此通道是所有大件設備由大門推入後勤區的唯一走道，<strong>走廊淨寬必須保持 100cm 以上</strong>。',
           '🚫 <strong>無障礙地坪</strong>：走廊與前後各房間交界處嚴禁施作凸起門檻，確保一人即可輕鬆推運重型油壓台車。'
         ]
       },
@@ -434,13 +439,13 @@
         navId: 'nav-backyard',
         pinId: 'pin-backyard',
         icon: '🌿',
-        title: '7. 後陽台天井（Backyard & Services）',
-        location: '位置：基地後方防火巷採光天井',
+        title: '7-後陽台區',
+        location: '對應位置：基地後方防火巷採光天井陽台',
         tag: '外機設備・通風管路',
-        summary: '狹長型採光天井，上方設有採光罩與通風口。設有地面排水孔與天然瓦斯管線，為空調主機與空壓機的理想安置區。',
+        summary: '狹長型採光天井，上方設有採光罩與通風口。設有地面排水孔與天然瓦斯管線，為空調主機、過濾水塔與空壓機的理想安置區。',
         photos: [
-          { src: './assets/site_photos/316052_0.jpg', title: '後陽台天井走道全景', desc: '上方有防雨採光罩，通風良好，壁面貼二丁掛磁磚，地坪設有排水孔。' },
-          { src: './assets/site_photos/316055_0.jpg', title: '瓦斯管線與過濾水桶放置處', desc: '現有水塔管路與軟水前置設備位置，通風良好無日曬。' }
+          { src: './assets/site_photos/316052_0.jpg', name: '316052_0.jpg', title: '後陽台天井走道全景', desc: '上方有防雨採光罩，通風良好，壁面貼二丁掛磁磚，地坪設有排水孔。' },
+          { src: './assets/site_photos/316055_0.jpg', name: '316055_0.jpg', title: '瓦斯管線與過濾水桶放置處', desc: '現有水塔管路與軟水前置設備位置，通風良好無日曬。' }
         ],
         discussions: [
           '🔇 <strong>靜音策略</strong>：設備維修用空壓機主機放置於此，高壓氣管穿牆配管至室內，室內維修無震動轟鳴。',
@@ -490,11 +495,14 @@
         <div class="group bg-slate-50 rounded-xl overflow-hidden border border-slate-200 hover:border-sky-400 hover:shadow-md transition cursor-pointer flex flex-col" onclick="openLightbox(${idx})">
           <div class="relative aspect-[4/3] bg-slate-200 overflow-hidden">
             <img src="${p.src}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition flex items-center justify-center">
-              <span class="opacity-0 group-hover:opacity-100 bg-slate-900/80 text-white text-[11px] font-bold px-2 py-1 rounded backdrop-blur-sm transition">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition flex items-center justify-center">
+              <span class="opacity-0 group-hover:opacity-100 bg-slate-900/80 text-white text-[11px] font-bold px-2 py-1 rounded backdrop-blur-sm transition flex items-center gap-1">
                 🔍 點擊放大
               </span>
             </div>
+            <span class="absolute bottom-1.5 left-1.5 bg-slate-900/70 text-slate-200 text-[10px] font-mono px-1.5 py-0.5 rounded backdrop-blur-xs">
+              ${p.name}
+            </span>
           </div>
           <div class="p-2 sm:p-2.5 flex-1 flex flex-col justify-between">
             <h5 class="text-xs font-bold text-slate-800 line-clamp-1">${p.title}</h5>
@@ -507,7 +515,7 @@
       const discussContainer = document.getElementById('discussion-points');
       discussContainer.innerHTML = data.discussions.map(d => `
         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5 leading-relaxed">
-          <span class="text-sky-600 mt-0.5">▸</span>
+          <span class="text-sky-600 mt-0.5 font-bold">▸</span>
           <div>${d}</div>
         </div>
       `).join('');
@@ -533,9 +541,9 @@
       if (!photos || photos.length === 0) return;
       const p = photos[currentPhotoIndex];
       document.getElementById('lightbox-img').src = p.src;
-      document.getElementById('lightbox-title').innerText = `${zonesData[currentZone].title} — ${p.title}`;
+      document.getElementById('lightbox-title').innerText = `${zonesData[currentZone].title} — ${p.title} (${p.name})`;
       document.getElementById('lightbox-counter').innerText = `${currentPhotoIndex + 1} / ${photos.length}`;
-      document.getElementById('lightbox-caption').innerHTML = `<strong>現場重點：</strong>${p.desc}`;
+      document.getElementById('lightbox-caption').innerHTML = `<strong>現場實況說明：</strong>${p.desc}`;
     }
 
     function nextPhoto() {
