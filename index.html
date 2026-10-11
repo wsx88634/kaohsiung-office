@@ -104,6 +104,9 @@
       <button onclick="setZone('backyard')" id="nav-backyard" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
         <span>🌿</span> 7. 後陽台區 (2張)
       </button>
+      <button onclick="setZone('other')" id="nav-other" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>⚡</span> 8. 其他區域 (7張)
+      </button>
     </div>
   </header>
 
@@ -117,7 +120,7 @@
           <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
           <h2 class="text-sm font-bold text-slate-800">設計師平面圖 (點擊號碼標籤切換)</h2>
         </div>
-        <span class="text-[11px] text-slate-500 font-medium">共 7 大對應區域</span>
+        <span class="text-[11px] text-slate-500 font-medium">共 8 大對應區域</span>
       </div>
 
       <!-- 圖面容器 -->
@@ -199,6 +202,17 @@
             </div>
             <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
               7. 後陽台區
+            </div>
+          </div>
+
+          <!-- 8. 其他區域 (左下角紅框位置) -->
+          <div onclick="setZone('other')" id="pin-other" style="top: 90%; left: 14.5%;" class="zone-hotspot group" title="8-其他區域">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-red-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-red-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              8
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              8. 其他區域
             </div>
           </div>
 
@@ -438,6 +452,25 @@
         discussions: [
           '🔇 <strong>靜音策略</strong>：設備維修用空壓機主機放置於此，高壓氣管穿牆配管至室內，室內維修無震動轟鳴。',
           '❄️ <strong>空調外機</strong>：全室分離式冷氣主機可吊掛於此天井牆面，不佔用一樓臨路門面空間。'
+        ]
+      },
+      other: {
+        id: 'other',
+        navId: 'nav-other',
+        pinId: 'pin-other',
+        icon: '⚡',
+        title: '8-其他區域',
+        location: '對應位置：水電總開關配電箱、天花板空調檢修孔、雙衛浴與天然瓦斯表',
+        tag: '水電基建・設備附屬',
+        summary: '全室核心機電設施與附屬空間。包含 1F 總配電箱（開關迴路與線路現況）、天花板冷氣風管檢修孔、兩間獨立衛生間現況，以及後陽台欣高微電腦瓦斯表。',
+        photos: [
+          { src: './assets/site_photos/316758_0.jpg', name: '316758_0.jpg', title: '1F 總配電箱內部接線與各分路開關', desc: '50A 總開關、獨立冷氣、招牌燈、電動門、中央展示台插座等配線現況。' },
+          { src: './assets/site_photos/316759_0.jpg', name: '316759_0.jpg', title: '1F 分電箱面板與漏電斷路器標籤', desc: '抽水馬達 30A 漏電斷路器、電燈、插座等分路標籤面板。' },
+          { src: './assets/site_photos/316760_0.jpg', name: '316760_0.jpg', title: '總配電箱上下雙箱整合全景', desc: '配電箱上下配置全景，壁面註記展示櫃、壁板燈等迴路位置。' },
+          { src: './assets/site_photos/316761_0.jpg', name: '316761_0.jpg', title: '前展區天花板風管檢修開孔', desc: '天花板冷氣風管走向與嵌燈骨架，裝修時便於查線與拉設風管。' },
+          { src: './assets/site_photos/316762_0.jpg', name: '316762_0.jpg', title: '衛生間現況 A', desc: '後方左側獨立衛浴，配有座式馬桶、不鏽鋼水槽與牆面磁磚。' },
+          { src: './assets/site_photos/316763_0.jpg', name: '316763_0.jpg', title: '衛生間現況 B', desc: '後方第二間獨立衛浴，配有洗手面盆、梳妝鏡與淋浴蓮蓬頭。' },
+          { src: './assets/site_photos/316764_0.jpg', name: '316764_0.jpg', title: '欣高石油氣微電腦天然瓦斯表', desc: '後陽台天然瓦斯表（型號 MT40N-A3）及緊急遮斷閥門現況。' }
         ]
       }
     };
