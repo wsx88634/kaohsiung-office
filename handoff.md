@@ -21,6 +21,6 @@
 - 展廚設備功耗大（RATIONAL 蒸烤箱需三相 380V），租約定案後應第一時間委請電匠向台電申請三相四線增容。
 
 ## 🕐 最後更新
-- 時間：2026-10-11 12:53
+- 時間：2026-10-11 23:22
 - 更新者：阿噗（Antigravity） @ DESKTOP-U8HAOU6
-- Git push：—（本專案暫未啟用 GitHub 遠端，僅本地 Git 版控）
+- Git push：✅ 已推至 GitHub（Pages 部署網址：https://wsx88634.github.io/kaohsiung-office/ ）

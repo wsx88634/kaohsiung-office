@@ -38,7 +38,7 @@
 | 層級 | 平台 | 位置 | 讀取時機 |
 |------|------|------|---------|
 | L1 | 本地（GDrive） | `agents.md`＋`handoff.md` | 每個 session |
-| L2 | GitHub | 暫未啟用遠端（僅本地 Git 版控） | 指定時 |
+| L2 | GitHub | [wsx88634/kaohsiung-office](https://github.com/wsx88634/kaohsiung-office)（Pages: https://wsx88634.github.io/kaohsiung-office/ ） | 指定時 |
 | L3 | Obsidian | `空間設計/專案工作流程.md` | 有需要時 |
 
 ## 工作約定
