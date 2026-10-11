@@ -253,18 +253,6 @@
         </div>
       </div>
 
-      <!-- 位置規劃討論重點 -->
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="w-2 h-4 bg-sky-600 rounded-full"></span>
-          <h4 class="text-sm font-bold text-slate-900">💬 位置規劃討論重點（老闆決策審查）</h4>
-        </div>
-
-        <div id="discussion-points" class="space-y-2.5 text-xs sm:text-sm text-slate-700">
-          <!-- 動態討論重點 -->
-        </div>
-      </div>
-
     </div>
 
   </main>
@@ -508,15 +496,6 @@
             <h5 class="text-xs font-bold text-slate-800 line-clamp-1">${p.title}</h5>
             <p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-tight">${p.desc}</p>
           </div>
-        </div>
-      `).join('');
-
-      // 渲染討論重點
-      const discussContainer = document.getElementById('discussion-points');
-      discussContainer.innerHTML = data.discussions.map(d => `
-        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5 leading-relaxed">
-          <span class="text-sky-600 mt-0.5 font-bold">▸</span>
-          <div>${d}</div>
         </div>
       `).join('');
     }
