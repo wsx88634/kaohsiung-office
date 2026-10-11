@@ -3,1067 +3,472 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>30坪複合營運基地 — 空間規劃與設備導入提案互動報告</title>
+  <title>30坪空間位置規劃與現場實景討論 — 互動導覽</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
     
     body {
       font-family: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
-      scroll-behavior: smooth;
     }
 
-    /* Hotspot styling */
-    .hotspot-pin {
+    /* 平面圖熱點樣式 */
+    .zone-hotspot {
       position: absolute;
       transform: translate(-50%, -50%);
       cursor: pointer;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 20;
     }
-    .hotspot-pin:hover {
-      transform: translate(-50%, -50%) scale(1.18);
-    }
-    .hotspot-pin.active {
-      transform: translate(-50%, -50%) scale(1.25);
+    .zone-hotspot:hover {
+      transform: translate(-50%, -50%) scale(1.15);
       z-index: 30;
     }
-    .hotspot-pulse {
-      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    .zone-hotspot.active {
+      transform: translate(-50%, -50%) scale(1.22);
+      z-index: 40;
+    }
+    .zone-hotspot.active .hotspot-ring {
+      box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.4), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .pulse-effect {
+      animation: pulse-ring 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
     @keyframes pulse-ring {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 16px rgba(2, 132, 199, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.35); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+
+    /* 隱藏原生捲軸但保留滾動 */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     @media print {
       .no-print { display: none !important; }
-      body { background: white !important; color: black !important; }
-      .page-break { page-break-before: always; }
-      .shadow-xl, .shadow-md, .shadow-lg, .shadow-sm { box-shadow: none !important; }
+      body { background: white !important; }
     }
   </style>
 </head>
-<body class="bg-slate-100/70 text-slate-800 antialiased selection:bg-sky-500 selection:text-white">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
 
-  <!-- 頂部導航與工具列 -->
-  <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+  <!-- 頂部精簡導覽列 -->
+  <header class="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white shadow-md">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 flex items-center justify-center font-black text-white shadow-md shadow-sky-500/20">
+        <div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center font-black text-white text-sm shadow">
           30P
         </div>
         <div>
-          <h1 class="text-base sm:text-lg font-bold leading-tight flex items-center gap-2">
-            30坪複合營運基地空間規劃
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">老闆點閱互動測試版</span>
+          <h1 class="text-sm sm:text-base font-bold flex items-center gap-2">
+            空間位置規劃與現場實景討論
+            <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">平面圖 ⇄ 照片互動</span>
           </h1>
-          <p class="text-xs text-slate-400 hidden sm:block">展示體驗廚房・多功能辦公會議・專業維修室・倉儲物流庫</p>
         </div>
       </div>
 
-      <nav class="hidden md:flex items-center space-x-1 text-xs sm:text-sm font-medium">
-        <a href="#summary" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">決策摘要</a>
-        <a href="#interactive-map" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">平面圖熱點</a>
-        <a href="#site-audit" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">現場實勘</a>
-        <a href="#equipment-zones" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">設備清單</a>
-        <a href="#recommendations" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">阿噗5大建議</a>
-        <a href="#decision-simulator" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition">方案試算</a>
-      </nav>
-
+      <!-- 快速切換標籤 -->
       <div class="flex items-center space-x-2">
-        <button onclick="window.print()" class="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-md shadow-sky-600/30 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-          一鍵列印/存PDF
+        <span class="text-xs text-slate-400 hidden lg:inline">點擊圖面或按鈕切換區域：</span>
+        <button onclick="window.print()" class="no-print inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition border border-slate-700">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          列印
         </button>
       </div>
     </div>
+
+    <!-- 區域按鈕列 -->
+    <div class="bg-slate-800/90 border-t border-slate-700/80 px-4 py-2 overflow-x-auto no-scrollbar flex items-center gap-1.5 text-xs">
+      <button onclick="setZone('kitchen')" id="nav-kitchen" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-sky-600 text-white shadow">
+        <span>🍽️</span> 1. 展示體驗廚房（中島區）
+      </button>
+      <button onclick="setZone('office')" id="nav-office" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>💼</span> 2. 辦公多功能會議室
+      </button>
+      <button onclick="setZone('repair')" id="nav-repair" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>🔧</span> 3. 專業設備維修室（原茶水間）
+      </button>
+      <button onclick="setZone('warehouse')" id="nav-warehouse" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>📦</span> 4. 倉儲物流備品庫（活用空間）
+      </button>
+      <button onclick="setZone('entrance')" id="nav-entrance" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>🚪</span> 5. 門面騎樓與進出口
+      </button>
+      <button onclick="setZone('corridor')" id="nav-corridor" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>🚶</span> 6. 中央過渡走廊
+      </button>
+      <button onclick="setZone('backyard')" id="nav-backyard" class="zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5">
+        <span>🌿</span> 7. 後陽台天井（通風外機）
+      </button>
+    </div>
   </header>
 
-  <!-- 主內容容器 -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+  <!-- 主工作台：左右分割視圖 -->
+  <main class="max-w-[1600px] w-full mx-auto p-3 sm:p-5 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
-    <!-- 1. Executive Summary 決策總覽儀表板 -->
-    <section id="summary" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
-        <div>
-          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-sky-50 text-sky-700 text-xs font-bold mb-3 border border-sky-200">
-            📊 商業空間企劃與可行性評估報告
-          </div>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            打造「前台尊榮體驗 + 中台商務洽談 + 後台高效維修倉儲」旗艦基地
-          </h2>
-          <p class="mt-2 text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
-            本案基地實際室內使用面積約 <strong>30 坪</strong>（正面面寬 8.6 米 × 縱深 14.2 米），原為連鎖通訊行門市。
-            為滿足高規格商業營運，本案將平面重組為四大核心分區：
-            <strong>展示體驗廚房</strong>、<strong>多功能辦公會議室</strong>、<strong>專業設備維修室</strong>與<strong>倉儲物流庫</strong>。
-          </p>
+    <!-- 左欄：平面圖與互動熱點 (佔 5 欄) -->
+    <div class="lg:col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-200 lg:sticky lg:top-24">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-500 animate-pulse"></span>
+          <h2 class="text-sm font-bold text-slate-800">設計師平面圖 (30坪格局)</h2>
         </div>
+        <span class="text-[11px] text-slate-600 font-medium">點擊圖面標籤切換</span>
+      </div>
 
-        <!-- 關鍵指標卡片組 -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-3 min-w-[280px]">
-          <div class="bg-sky-50/80 rounded-xl p-3.5 border border-sky-100">
-            <span class="text-xs text-sky-700 font-semibold">實用面積</span>
-            <div class="text-xl font-black text-sky-900 mt-0.5">約 30 坪</div>
-            <span class="text-[11px] text-sky-600">8.6m 面寬 / 1F 雙捲門</span>
+      <!-- 圖面容器 -->
+      <div class="relative w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-300 shadow-inner flex items-center justify-center p-1 sm:p-2">
+        <div class="relative w-full max-w-[500px]">
+          <img src="./assets/floor_plan.jpg" alt="平面圖" id="main-plan-img" class="w-full h-auto object-contain block rounded-lg select-none">
+
+          <!-- 1. 展示體驗廚房 (右前架高地板) -->
+          <div onclick="setZone('kitchen')" id="pin-kitchen" style="top: 61%; left: 63%;" class="zone-hotspot active group" title="展示體驗廚房">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-sky-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-sky-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              1
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              展示廚房
+            </div>
           </div>
-          <div class="bg-indigo-50/80 rounded-xl p-3.5 border border-indigo-100">
-            <span class="text-xs text-indigo-700 font-semibold">核心機能</span>
-            <div class="text-xl font-black text-indigo-900 mt-0.5">4 大專用區</div>
-            <span class="text-[11px] text-indigo-600">展廚 / 會議 / 維修 / 庫存</span>
+
+          <!-- 2. 辦公多功能會議室 (左前多功能空間) -->
+          <div onclick="setZone('office')" id="pin-office" style="top: 67%; left: 33%;" class="zone-hotspot group" title="辦公多功能會議室">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-indigo-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              2
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              會議辦公
+            </div>
           </div>
-          <div class="bg-amber-50/80 rounded-xl p-3.5 border border-amber-100">
-            <span class="text-xs text-amber-700 font-semibold">關鍵重電</span>
-            <div class="text-xl font-black text-amber-900 mt-0.5">380V 三相</div>
-            <span class="text-[11px] text-amber-600">蒸烤箱滿載 10.8kW 必配</span>
+
+          <!-- 3. 專業設備維修室 (左後原茶水間) -->
+          <div onclick="setZone('repair')" id="pin-repair" style="top: 22%; left: 32%;" class="zone-hotspot group" title="專業設備維修室">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-amber-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-amber-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              3
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              設備維修室
+            </div>
           </div>
-          <div class="bg-emerald-50/80 rounded-xl p-3.5 border border-emerald-100">
-            <span class="text-xs text-emerald-700 font-semibold">預估工期</span>
-            <div class="text-xl font-black text-emerald-900 mt-0.5">45 個日曆天</div>
-            <span class="text-[11px] text-emerald-600">拆除 ➔ 水電 ➔ 裝修 ➔ 調機</span>
+
+          <!-- 4. 倉儲物流備品庫 (右後活用空間) -->
+          <div onclick="setZone('warehouse')" id="pin-warehouse" style="top: 27%; left: 65%;" class="zone-hotspot group" title="倉儲物流備品庫">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-emerald-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              4
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              倉儲庫房
+            </div>
           </div>
+
+          <!-- 5. 門面騎樓與進出口 -->
+          <div onclick="setZone('entrance')" id="pin-entrance" style="top: 84%; left: 70%;" class="zone-hotspot group" title="門面騎樓與進出口">
+            <span class="pulse-effect absolute inset-0 rounded-full bg-rose-500"></span>
+            <div class="hotspot-ring relative flex items-center justify-center w-8 h-8 rounded-full bg-rose-600 text-white font-black text-xs border-2 border-white shadow-lg">
+              5
+            </div>
+            <div class="absolute left-1/2 -bottom-6 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-bold shadow opacity-90 group-hover:opacity-100">
+              門面進口
+            </div>
+          </div>
+
+          <!-- 6. 中央過渡走廊 -->
+          <div onclick="setZone('corridor')" id="pin-corridor" style="top: 45%; left: 38%;" class="zone-hotspot group" title="中央過渡走廊">
+            <div class="hotspot-ring relative flex items-center justify-center w-7 h-7 rounded-full bg-slate-700 text-white font-bold text-[11px] border-2 border-white shadow">
+              6
+            </div>
+          </div>
+
+          <!-- 7. 後陽台天井 -->
+          <div onclick="setZone('backyard')" id="pin-backyard" style="top: 10%; left: 35%;" class="zone-hotspot group" title="後陽台天井">
+            <div class="hotspot-ring relative flex items-center justify-center w-7 h-7 rounded-full bg-teal-600 text-white font-bold text-[11px] border-2 border-white shadow">
+              7
+            </div>
+          </div>
+
         </div>
       </div>
 
-      <!-- 四大空間佔比與任務分配長條圖 -->
-      <div class="mt-6 pt-2">
-        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
-          <span>四大空間配比與面積分佈</span>
-          <span>總計 100% 完整整合</span>
-        </div>
-        <div class="h-4 w-full rounded-full bg-slate-100 overflow-hidden flex shadow-inner">
-          <div style="width: 32%" class="bg-sky-500 hover:bg-sky-600 transition" title="展示體驗廚房 (32%)"></div>
-          <div style="width: 25%" class="bg-indigo-500 hover:bg-indigo-600 transition" title="辦公與多功能會議室 (25%)"></div>
-          <div style="width: 18%" class="bg-amber-500 hover:bg-amber-600 transition" title="專業設備維修室 (18%)"></div>
-          <div style="width: 25%" class="bg-emerald-500 hover:bg-emerald-600 transition" title="倉儲與備品庫 (25%)"></div>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-xs">
+      <div class="mt-3 flex items-center justify-between text-xs text-slate-500">
+        <span>面寬 8.6 米 × 縱深 14.2 米</span>
+        <span class="font-medium text-sky-700">點擊熱點可聯動右側照片</span>
+      </div>
+    </div>
+
+    <!-- 右欄：該區現場照片牆與位置規劃討論 (佔 7 欄) -->
+    <div class="lg:col-span-7 space-y-4">
+
+      <!-- 區塊標題與資訊卡 -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-sky-500"></span>
-            <span class="font-medium text-slate-700">展示廚房（約9.6坪，佔32%）</span>
+            <span id="zone-icon" class="text-2xl">🍽️</span>
+            <div>
+              <h3 id="zone-title" class="text-xl font-black text-slate-900">1. 展示體驗廚房（Demo Kitchen）</h3>
+              <p id="zone-location" class="text-xs text-slate-500 font-medium mt-0.5">位置：入門右側架高地板區｜約 9.6 坪</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-indigo-500"></span>
-            <span class="font-medium text-slate-700">辦公會議室（約7.5坪，佔25%）</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
-            <span class="font-medium text-slate-700">專業維修室（約5.4坪，佔18%）</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-            <span class="font-medium text-slate-700">倉儲物流庫（約7.5坪，佔25%）</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 2. Interactive Floor Plan 互動式平面圖導覽 -->
-    <section id="interactive-map" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
-      <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
-        <div>
-          <span class="text-xs font-bold tracking-wider uppercase text-sky-600">Interactive Floor Plan</span>
-          <h3 class="text-2xl font-bold text-slate-900 mt-1">平面配置圖與熱點點閱導覽</h3>
-          <p class="text-sm text-slate-500 mt-1">點擊下方平面圖上的「彩色編號標籤」或按鈕，右側面板立即切換該分區之現況、設備與施工規範。</p>
+          <span id="zone-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-50 text-sky-700 border border-sky-200">
+            核心視覺亮點
+          </span>
         </div>
 
-        <!-- 快捷標籤切換 -->
-        <div class="flex flex-wrap gap-1.5 no-print">
-          <button onclick="selectZone('kitchen')" id="btn-kitchen" class="zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-300 ring-2 ring-sky-400/20 transition">
-            🍽️ 1. 展示廚房
-          </button>
-          <button onclick="selectZone('office')" id="btn-office" class="zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            💼 2. 辦公會議室
-          </button>
-          <button onclick="selectZone('repair')" id="btn-repair" class="zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            🔧 3. 專業維修室
-          </button>
-          <button onclick="selectZone('warehouse')" id="btn-warehouse" class="zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            📦 4. 倉儲物流庫
-          </button>
-          <button onclick="selectZone('entrance')" id="btn-entrance" class="zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
-            🚪 5. 門面動線
-          </button>
-        </div>
-      </div>
-
-      <!-- 平面圖與右側資訊聯動容器 -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- 左側：圖面本體與熱點標記 (佔 7 欄) -->
-        <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-3 sm:p-5 shadow-inner relative overflow-hidden flex items-center justify-center">
-          <div class="relative w-full max-w-[560px] mx-auto rounded-xl overflow-hidden bg-white shadow-2xl border border-slate-700">
-            <!-- 底圖：設計師平面圖 -->
-            <img src="./assets/floor_plan.jpg" alt="設計師平面圖" id="blueprint-img" class="w-full h-auto object-contain block select-none">
-
-            <!-- 熱點 1：展示體驗廚房 (右前架高地板＋中島) -->
-            <div onclick="selectZone('kitchen')" id="pin-kitchen" style="top: 61%; left: 63%;" class="hotspot-pin active group" title="展示體驗廚房">
-              <span class="hotspot-pulse absolute inset-0 rounded-full bg-sky-500"></span>
-              <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-sky-600 text-white font-black text-xs shadow-xl border-2 border-white">
-                1
-              </div>
-              <div class="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-semibold shadow pointer-events-none opacity-0 group-hover:opacity-100 transition">
-                展示體驗廚房
-              </div>
-            </div>
-
-            <!-- 熱點 2：辦公會議室 (左前多功能空間) -->
-            <div onclick="selectZone('office')" id="pin-office" style="top: 67%; left: 33%;" class="hotspot-pin group" title="多功能會議與辦公">
-              <span class="hotspot-pulse absolute inset-0 rounded-full bg-indigo-500"></span>
-              <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-indigo-600 text-white font-black text-xs shadow-xl border-2 border-white">
-                2
-              </div>
-              <div class="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-semibold shadow pointer-events-none opacity-0 group-hover:opacity-100 transition">
-                多功能會議辦公室
-              </div>
-            </div>
-
-            <!-- 熱點 3：專業設備維修室 (左後原茶水間) -->
-            <div onclick="selectZone('repair')" id="pin-repair" style="top: 22%; left: 32%;" class="hotspot-pin group" title="專業設備維修室">
-              <span class="hotspot-pulse absolute inset-0 rounded-full bg-amber-500"></span>
-              <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-amber-600 text-white font-black text-xs shadow-xl border-2 border-white">
-                3
-              </div>
-              <div class="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-semibold shadow pointer-events-none opacity-0 group-hover:opacity-100 transition">
-                專業設備維修室
-              </div>
-            </div>
-
-            <!-- 熱點 4：倉儲物流庫 (右後活用空間) -->
-            <div onclick="selectZone('warehouse')" id="pin-warehouse" style="top: 27%; left: 65%;" class="hotspot-pin group" title="倉儲與備品庫">
-              <span class="hotspot-pulse absolute inset-0 rounded-full bg-emerald-500"></span>
-              <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs shadow-xl border-2 border-white">
-                4
-              </div>
-              <div class="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-semibold shadow pointer-events-none opacity-0 group-hover:opacity-100 transition">
-                倉儲與備品庫
-              </div>
-            </div>
-
-            <!-- 熱點 5：進門門面 (正門口) -->
-            <div onclick="selectZone('entrance')" id="pin-entrance" style="top: 83%; left: 70%;" class="hotspot-pin group" title="主進出門口與門面">
-              <span class="hotspot-pulse absolute inset-0 rounded-full bg-rose-500"></span>
-              <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-rose-600 text-white font-black text-xs shadow-xl border-2 border-white">
-                5
-              </div>
-              <div class="absolute left-1/2 -bottom-7 -translate-x-1/2 whitespace-nowrap px-2 py-0.5 rounded bg-slate-900 text-white text-[10px] font-semibold shadow pointer-events-none opacity-0 group-hover:opacity-100 transition">
-                門面與進出動線
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 右側：聯動詳細卡片 (佔 5 欄) -->
-        <div class="lg:col-span-5 bg-slate-50/80 rounded-2xl p-5 sm:p-6 border border-slate-200 h-full flex flex-col justify-between shadow-sm">
-          <div id="zone-details-container">
-            <!-- JS 動態抽換內容 -->
-          </div>
-
-          <div class="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-            <span class="flex items-center gap-1.5 font-medium">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              熱點即時聯動中
-            </span>
-            <span class="text-slate-400">點擊不同區域即時切換視角</span>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 3. Site Audit 現況實勘照片庫 (9張精選高清照片) -->
-    <section id="site-audit" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <span class="text-xs font-bold tracking-wider uppercase text-amber-600">Site Conditions & Photos</span>
-          <h3 class="text-2xl font-bold text-slate-900 mt-1">現場實勘狀況 vs 改造工程標註</h3>
-          <p class="text-sm text-slate-500 mt-1">2026-10-11 實勘實拍照片，精準掌握原通訊行木作櫃體拆除與各區水電現況。</p>
-        </div>
-        <div class="text-xs font-medium text-slate-600 bg-slate-100 px-3.5 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5">
-          <span>🔍</span> 點擊任一張照片即可開啟燈箱放大檢視
-        </div>
-      </div>
-
-      <!-- 9宮格實勘照片 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        
-        <!-- 照片 1 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_01_facade.jpg', '01 臨路一樓門面全景')">
-            <img src="./assets/site_photos/photo_01_facade.jpg" alt="門面外觀" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">01 門面外觀</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">臨路一樓店面・雙鐵捲門</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">正面寬約 8.6 米，雙店面氣派面寬。門前可供貨車臨時裝卸設備，二樓現成廣告鐵架可更換全新企業形象發光招牌。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded">
-              <span>⚠️ 改造重點：拆除舊通訊行招牌，安裝抗風壓發光立體字招牌。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 2 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_02_arcade.jpg', '02 騎樓門口與大面玻璃')">
-            <img src="./assets/site_photos/photo_02_arcade.jpg" alt="騎樓門口" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">02 騎樓門口</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">深邃騎樓・大面積落地玻璃</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">騎樓防滑地磚完好。大面清玻璃透光度極高，行人與客戶從騎樓即可一眼望見內部的精緻展示廚房與料理中島。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-sky-700 bg-sky-50 px-2 py-1 rounded">
-              <span>💡 設計利多：保留既有大面玻璃框體，清洗翻新即可大幅節省工程費。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 3 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_03_front_full.jpg', '03 前展區全景（原通訊行）')">
-            <img src="./assets/site_photos/photo_03_front_full.jpg" alt="前區全景" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">03 前區全景</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">前展區現況（可見 Pacojet 箱裝設備）</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">挑高天花板已有盒燈與嵌燈，地面為木紋塑膠地板。中央已暫放微磨機等設備，兩側綠白色舊展示櫃待拆除。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-rose-700 bg-rose-50 px-2 py-1 rounded">
-              <span>🔨 拆除工程：全面清空既有展示櫃，右側施作架高展示木地板。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 4 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_04_view_to_entrance.jpg', '04 從室內走廊望向大門')">
-            <img src="./assets/site_photos/photo_04_view_to_entrance.jpg" alt="望向大門" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">04 望向大門</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">室內開闊通透・左右動線分明</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">從中央過道回望大門，縱深充足。左前方可規劃為 8人多功能會議室，右前方為中島廚具展演區，中央留白 1.5 米通道。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-indigo-700 bg-indigo-50 px-2 py-1 rounded">
-              <span>🎯 動線規劃：左側會議靜態洽談、右側廚房動態出餐，左右動靜分明。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 5 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_05_right_slatwall.jpg', '05 右側長型展示壁面')">
-            <img src="./assets/site_photos/photo_05_right_slatwall.jpg" alt="右側展示區" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">05 右側展示牆</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">長達 6 米展示背牆（原配件凹槽板）</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">此背牆位置即為設計師圖面上的「廚具設備展示櫃」。現況有舊式凹槽板與地櫃，寬度十分充裕。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-sky-700 bg-sky-50 px-2 py-1 rounded">
-              <span>⚡ 設備進駐：此處改裝為商用蒸烤箱嵌入櫃與不鏽鋼抗油污背板牆。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 6 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_06_corridor.jpg', '06 中央過渡走廊入口')">
-            <img src="./assets/site_photos/photo_06_corridor.jpg" alt="中央走道" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">06 走道過渡區</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">前往後勤維修與倉儲區之走廊</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">走道地磚為堅固拋光石英磚，通往後方兩大獨立房間與衛生間。此為推車搬運大型機台之必經咽喉。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded">
-              <span>⚠️ 尺寸防呆：此走道淨寬需嚴格維持 >= 100cm，確保大型烤箱木箱順暢通過。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 7 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_07_room_a.jpg', '07 後方獨立隔間A（活用空間）')">
-            <img src="./assets/site_photos/photo_07_room_a.jpg" alt="後方隔間A" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">07 後方隔間A (活用空間)</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">縱深 6.2 米方正大房間（規劃倉儲庫房）</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">設計師圖中之右後「活用空間（3.7m × 6.2m）」，地坪完好乾淨，通風好，內有原木製高櫃待清空。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-1 rounded">
-              <span>📦 倉儲升級：配置 4 組重型角鋼架與零件分類箱，打造高承重整機物流庫。</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 8 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_08_room_b.jpg', '08 後方獨立隔間B（具備排水與後陽台門）')">
-            <img src="./assets/site_photos/photo_08_room_b.jpg" alt="後方隔間B" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">08 後方隔間B (茶水作業區)</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">有給排水孔與後陽台門（規劃專業維修室）</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">設計師圖左後「茶水間」，擁有給水與地面排水孔，有對外採光通風窗與鋁門直通後陽台天井，並附有專屬衛浴。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-1 rounded">
-              <span>🔧 維修核心：阿噗強烈建議將此間定為維修室，洗零件排水、試水試機最方便！</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 照片 9 -->
-        <div class="group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition">
-          <div class="relative aspect-video sm:aspect-[4/3] bg-slate-100 overflow-hidden cursor-pointer" onclick="openPhotoModal('./assets/site_photos/photo_09_backyard.jpg', '09 後方防火巷天井陽台')">
-            <img src="./assets/site_photos/photo_09_backyard.jpg" alt="後陽台天井" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 backdrop-blur-sm text-white text-[11px] font-semibold">09 後陽台天井</span>
-          </div>
-          <div class="p-3.5">
-            <h4 class="font-bold text-slate-800 text-sm">採光罩天井陽台・瓦斯水龍頭俱全</h4>
-            <p class="text-xs text-slate-600 mt-1 leading-relaxed">狹長型通風天井，上方設有雨遮採光罩。有天然瓦斯表與地面排水孔，適合作為空調主機與空壓機放置區。</p>
-            <div class="mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-purple-700 bg-purple-50 px-2 py-1 rounded">
-              <span>🔇 靜音策略：空壓機放置於此天井，高壓氣管穿牆入室內，維修室享受徹底靜音。</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 4. Zoning & Equipment Specs 四大分區規劃與設備導入清單 -->
-    <section id="equipment-zones" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
-      <div class="mb-6">
-        <span class="text-xs font-bold tracking-wider uppercase text-sky-600">Infrastructure & Zoning</span>
-        <h3 class="text-2xl font-bold text-slate-900 mt-1">四大核心區域規劃與設備導入規格表</h3>
-        <p class="text-sm text-slate-500 mt-1">針對商用餐飲與專業設備營運模式，精確配置水電、排煙、網路與實體設備。</p>
-      </div>
-
-      <!-- 分區詳細卡片 -->
-      <div class="space-y-6">
-
-        <!-- 區塊 1：展示體驗廚房 -->
-        <div class="border border-sky-200 rounded-2xl overflow-hidden bg-sky-50/20">
-          <div class="bg-gradient-to-r from-sky-600 to-sky-700 px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🍽️</span>
-              <div>
-                <h4 class="text-lg font-bold">區域一：展示體驗廚房（Demo & Showroom Kitchen）</h4>
-                <p class="text-xs text-sky-100">進門右側架高地板區｜約 9.6 坪｜商用實機料理演示、VIP 品嘗會與品牌形象</p>
-              </div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm self-start sm:self-auto">核心亮點</span>
-          </div>
-
-          <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-3">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-sky-600 rounded-full"></span> 空間規劃重點
-              </h5>
-              <ul class="text-xs text-slate-600 space-y-2 leading-relaxed">
-                <li class="flex items-start gap-2">
-                  <span class="text-sky-600 font-bold">▸</span>
-                  <strong>架高木地板（約 15-20cm）</strong>：巧妙收納三相四線高負載重電電纜、給排水與冷凝管，不傷原地磚。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-sky-600 font-bold">▸</span>
-                  <strong>斜角不鏽鋼中島吧台</strong>：設 4-6 席高腳椅，主廚可直接面對客戶進行料理試吃。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-sky-600 font-bold">▸</span>
-                  <strong>背牆設備展示高櫃</strong>：嵌入式商用蒸烤箱展示位、耐高溫不鏽鋼背板與重點軌道投射燈。
-                </li>
-              </ul>
-            </div>
-
-            <div class="lg:col-span-8 overflow-x-auto">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-sky-600 rounded-full"></span> 預計導入設備與工程規格清單
-              </h5>
-              <table class="w-full text-xs text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
-                    <th class="py-2.5 px-3 font-semibold">設備名稱／項目</th>
-                    <th class="py-2.5 px-3 font-semibold">規格／型號建議</th>
-                    <th class="py-2.5 px-3 font-semibold">電力需求</th>
-                    <th class="py-2.5 px-3 font-semibold">給排水／排氣需求</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 text-slate-600 bg-white">
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">萬能蒸烤箱 (Combisteamer)</td>
-                    <td class="py-2.5 px-3">RATIONAL iCombi Pro 6-1/1</td>
-                    <td class="py-2.5 px-3 text-rose-600 font-bold">3相 380V / 10.8 kW</td>
-                    <td class="py-2.5 px-3">3/4" 軟水進水 + DN50 耐熱排水 + UltraVent 冷凝罩</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">急速冷凍冷藏櫃 (Blast Chiller)</td>
-                    <td class="py-2.5 px-3">商用 5盤急速冷凍櫃</td>
-                    <td class="py-2.5 px-3">單相 220V / 1.5 kW</td>
-                    <td class="py-2.5 px-3">冷凝水接排水孔</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">微磨冷凍粉碎機</td>
-                    <td class="py-2.5 px-3">Pacojet 4 旗艦機型</td>
-                    <td class="py-2.5 px-3">單相 110V / 220V (1.5 kW)</td>
-                    <td class="py-2.5 px-3">獨立穩定專用插座</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">中島商用感應電磁爐</td>
-                    <td class="py-2.5 px-3">雙口平面大功率電磁爐 (3.5kW × 2)</td>
-                    <td class="py-2.5 px-3 font-semibold text-rose-600">單相 220V / 32A</td>
-                    <td class="py-2.5 px-3">下嵌式進出通風散熱口</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">前置軟水淨水系統</td>
-                    <td class="py-2.5 px-3">商用離子交換樹脂軟水器 + 活性碳</td>
-                    <td class="py-2.5 px-3">110V (自動反洗控制頭)</td>
-                    <td class="py-2.5 px-3">自來水進水 + 軟水輸出至蒸烤箱</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">中島洗滌水槽與截油槽</td>
-                    <td class="py-2.5 px-3">不鏽鋼單大槽 + 小型不鏽鋼截油槽</td>
-                    <td class="py-2.5 px-3">—</td>
-                    <td class="py-2.5 px-3">冷熱進水 + 截油槽防臭落水頭</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- 區塊 2：辦公與多功能會議室 -->
-        <div class="border border-indigo-200 rounded-2xl overflow-hidden bg-indigo-50/20">
-          <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">💼</span>
-              <div>
-                <h4 class="text-lg font-bold">區域二：辦公與多功能會議室（Office & Conference Center）</h4>
-                <p class="text-xs text-indigo-100">進門左側多功能區｜約 7.5 坪｜商務洽談、6-8人會議、日常辦公與投影簡報</p>
-              </div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm self-start sm:self-auto">商務核心</span>
-          </div>
-
-          <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-3">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-indigo-600 rounded-full"></span> 空間規劃重點
-              </h5>
-              <ul class="text-xs text-slate-600 space-y-2 leading-relaxed">
-                <li class="flex items-start gap-2">
-                  <span class="text-indigo-600 font-bold">▸</span>
-                  <strong>長虹隔音玻璃連動拉門</strong>：阿噗強烈建議增設，開會時拉上即可阻隔廚房試菜與後台雜音，商務隱密性高。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-indigo-600 font-bold">▸</span>
-                  <strong>8人實木會議長桌</strong>：桌面內嵌隱藏式彈出型多功能線槽盒（HDMI、Type-C、110V、RJ45）。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-indigo-600 font-bold">▸</span>
-                  <strong>主管與行政辦公位</strong>：配置 2-3 組辦公桌椅與整面落地文件收納高櫃。
-                </li>
-              </ul>
-            </div>
-
-            <div class="lg:col-span-8 overflow-x-auto">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-indigo-600 rounded-full"></span> 預計導入設備與工程規格清單
-              </h5>
-              <table class="w-full text-xs text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
-                    <th class="py-2.5 px-3 font-semibold">設備名稱／項目</th>
-                    <th class="py-2.5 px-3 font-semibold">規格／型號建議</th>
-                    <th class="py-2.5 px-3 font-semibold">電力需求</th>
-                    <th class="py-2.5 px-3 font-semibold">弱電／網路需求</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 text-slate-600 bg-white">
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">簡報顯示系統</td>
-                    <td class="py-2.5 px-3">75 吋 4K 智慧商用顯示器 / 電子白板</td>
-                    <td class="py-2.5 px-3">110V 獨立插座</td>
-                    <td class="py-2.5 px-3">預留牆內 HDMI 穿線管 + Wi-Fi 6 無線投屏</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">視訊會議設備</td>
-                    <td class="py-2.5 px-3">Logitech Rally Bar 一體式視訊攝影機</td>
-                    <td class="py-2.5 px-3">110V 供電</td>
-                    <td class="py-2.5 px-3">Cat6 實體網路線 (POE+ 或標準網孔)</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">會議桌多功能集線盒</td>
-                    <td class="py-2.5 px-3">桌面阻尼緩開插座模組</td>
-                    <td class="py-2.5 px-3">110V 雙迴路 (防跳電)</td>
-                    <td class="py-2.5 px-3">RJ45 雙網孔 + USB 快充孔</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- 區塊 3：專業設備維修室 -->
-        <div class="border border-amber-200 rounded-2xl overflow-hidden bg-amber-50/20">
-          <div class="bg-gradient-to-r from-amber-600 to-amber-700 px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">🔧</span>
-              <div>
-                <h4 class="text-lg font-bold">區域三：專業設備維修室（Service & Repair Lab）</h4>
-                <p class="text-xs text-amber-100">後方左側獨立隔間（原茶水間）｜約 5.4 坪｜設備檢修拆解、通電試水與售後技術支援</p>
-              </div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm self-start sm:self-auto">技術後盾</span>
-          </div>
-
-          <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-3">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-amber-600 rounded-full"></span> 空間規劃重點
-              </h5>
-              <ul class="text-xs text-slate-600 space-y-2 leading-relaxed">
-                <li class="flex items-start gap-2">
-                  <span class="text-amber-600 font-bold">▸</span>
-                  <strong>實體封閉隔間優勢</strong>：有效阻隔敲擊工具、氣動起子與高壓水槍噪音，門外客戶全無干擾。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-amber-600 font-bold">▸</span>
-                  <strong>多電壓綜合測試配電盤</strong>：具備 110V、單相 220V、三相 220V、三相 380V 插座，供各品牌機器上電測試。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-amber-600 font-bold">▸</span>
-                  <strong>清洗測試水槽與地排</strong>：利用原茶水間現有給水與地面排水孔，洗滌零件廢水直排。
-                </li>
-              </ul>
-            </div>
-
-            <div class="lg:col-span-8 overflow-x-auto">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-amber-600 rounded-full"></span> 預計導入設備與工程規格清單
-              </h5>
-              <table class="w-full text-xs text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
-                    <th class="py-2.5 px-3 font-semibold">設備名稱／項目</th>
-                    <th class="py-2.5 px-3 font-semibold">規格／型號建議</th>
-                    <th class="py-2.5 px-3 font-semibold">電力需求</th>
-                    <th class="py-2.5 px-3 font-semibold">氣動／排水／環境需求</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 text-slate-600 bg-white">
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">重型不鏽鋼維修工作台</td>
-                    <td class="py-2.5 px-3">耐重 500kg 實木/不鏽鋼工作桌 (200×90cm)</td>
-                    <td class="py-2.5 px-3">桌上附 6組 110V/220V 專用插座</td>
-                    <td class="py-2.5 px-3">桌面鋪設耐酸鹼防滑防刮橡膠墊</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">牆面模組化工具洞洞板</td>
-                    <td class="py-2.5 px-3">金屬 Pegboard 工具掛板 (扳手、電表、螺絲起子)</td>
-                    <td class="py-2.5 px-3">—</td>
-                    <td class="py-2.5 px-3">加裝專用高演色 LED 檢修檯燈</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">機台測試綜合配電板</td>
-                    <td class="py-2.5 px-3">獨立分電箱 (附電流表、電壓表、漏電斷路器)</td>
-                    <td class="py-2.5 px-3 text-rose-600 font-bold">110V / 220V / 380V (三相)</td>
-                    <td class="py-2.5 px-3">緊急紅色 E-STOP 斷電按鈕</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">無油靜音空壓機系統</td>
-                    <td class="py-2.5 px-3">主機置於後陽台，室內設置氣動快速接頭</td>
-                    <td class="py-2.5 px-3">單相 220V (後陽台插座)</td>
-                    <td class="py-2.5 px-3">高壓氣管穿牆入室內，供應吹塵槍</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">超音波零件清洗槽</td>
-                    <td class="py-2.5 px-3">15L~30L 工業級加熱型超音波清洗機</td>
-                    <td class="py-2.5 px-3">110V / 1.2 kW (加熱型)</td>
-                    <td class="py-2.5 px-3">緊鄰水槽，清洗後廢水直排水管</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- 區塊 4：倉儲物流與備品庫 -->
-        <div class="border border-emerald-200 rounded-2xl overflow-hidden bg-emerald-50/20">
-          <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl">📦</span>
-              <div>
-                <h4 class="text-lg font-bold">區域四：倉儲物流與備品庫（Storage & Parts Warehouse）</h4>
-                <p class="text-xs text-emerald-100">後方右側活用空間｜約 7.5 坪｜整機設備庫存、原廠零件儲備與打包出貨區</p>
-              </div>
-            </div>
-            <span class="px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur-sm self-start sm:self-auto">後勤核心</span>
-          </div>
-
-          <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 space-y-3">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-emerald-600 rounded-full"></span> 空間規劃重點
-              </h5>
-              <ul class="text-xs text-slate-600 space-y-2 leading-relaxed">
-                <li class="flex items-start gap-2">
-                  <span class="text-emerald-600 font-bold">▸</span>
-                  <strong>縱深 6.2 米大容量空間</strong>：配置兩側重型高層貨架，中間預留 1.2 米油壓手推車通道。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-emerald-600 font-bold">▸</span>
-                  <strong>原廠零件快取儲位</strong>：配置抽屜式分類盒（收納加熱棒、微動開關、電子板等昂貴備料）。
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="text-emerald-600 font-bold">▸</span>
-                  <strong>打包出貨檢驗區</strong>：門口旁設 120cm 作業桌，配備電子地秤與條碼標籤機。
-                </li>
-              </ul>
-            </div>
-
-            <div class="lg:col-span-8 overflow-x-auto">
-              <h5 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
-                <span class="w-1.5 h-4 bg-emerald-600 rounded-full"></span> 預計導入設備與工程規格清單
-              </h5>
-              <table class="w-full text-xs text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
-                    <th class="py-2.5 px-3 font-semibold">設備名稱／項目</th>
-                    <th class="py-2.5 px-3 font-semibold">規格／型號建議</th>
-                    <th class="py-2.5 px-3 font-semibold">電力需求</th>
-                    <th class="py-2.5 px-3 font-semibold">載重／結構規格</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 text-slate-600 bg-white">
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">重型中量級倉儲貨架</td>
-                    <td class="py-2.5 px-3">免螺絲重型角鋼架 (高210 × 寬180 × 深60cm) 4組</td>
-                    <td class="py-2.5 px-3">—</td>
-                    <td class="py-2.5 px-3 font-semibold text-emerald-700">單層耐重 250-300kg</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">原廠零配件分類箱櫃</td>
-                    <td class="py-2.5 px-3">快取抽屜式零件櫃 (48抽 / 64抽 附標籤卡)</td>
-                    <td class="py-2.5 px-3">—</td>
-                    <td class="py-2.5 px-3">防塵防潮收納盒</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">物流油壓搬運升降台車</td>
-                    <td class="py-2.5 px-3">腳踏升降油壓手推車 (耐重 300kg，提升高90cm)</td>
-                    <td class="py-2.5 px-3">—</td>
-                    <td class="py-2.5 px-3">PU 靜音輪，不傷室內拋光石英磚</td>
-                  </tr>
-                  <tr>
-                    <td class="py-2.5 px-3 font-semibold text-slate-800">出貨打包與秤重作業台</td>
-                    <td class="py-2.5 px-3">鋼製打包作業桌 + 150kg 電子地秤</td>
-                    <td class="py-2.5 px-3">110V 獨立插座</td>
-                    <td class="py-2.5 px-3">配置熱感應出單標籤印表機</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 5. 阿噗的 5 大關鍵優化建議（給老闆審閱的戰略分析） -->
-    <section id="recommendations" class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 sm:p-8 text-white shadow-xl">
-      <div class="mb-8">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold border border-amber-400/30">
-          💡 阿噗專業觀點・避坑指南
-        </div>
-        <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-2">
-          給老闆的 5 大關鍵工程與營運優化建議
-        </h3>
-        <p class="text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
-          設計師初步平面圖掌握了良好架構，但針對「餐飲專業設備展示」與「售後檢修後勤」的特殊工種，阿噗深入推演提出以下 5 點優化方案，可為公司省下未來昂貴的二次改裝成本：
+        <p id="zone-summary" class="text-xs sm:text-sm text-slate-700 mt-3 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100">
+          進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示櫃，用於 RATIONAL 蒸烤箱、Pacojet 等設備的實機料理展演與 VIP 客戶試菜。
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- 建議 1 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-sky-500/50 transition">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center border border-sky-400/30">1</span>
-            <h4 class="font-bold text-base text-white">用電容量增容（向台電申請三相四線 380V）</h4>
+      <!-- 現場對應照片牆 -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3.5">
+          <div class="flex items-center gap-2">
+            <h4 class="text-sm font-bold text-slate-800">📸 該區域現場實勘照片</h4>
+            <span id="photo-count-badge" class="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-xs font-semibold">5 張照片</span>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            現場原通訊行用電為一般單相民生用電。一台 RATIONAL 6盤萬能蒸烤箱滿載約 <strong>10.8 kW</strong>，加上感應爐 (7kW) 與冷氣，一般電箱必跳電。<br>
-            <strong class="text-amber-300">阿噗建議：</strong> 租約確定後，第一時間委託甲級水電技工向台電申請增容至「三相四線 220V/380V，契約容量至少 25kW~40kW」，避免日後機台無法全載運轉。
-          </p>
+          <span class="text-xs text-sky-600 font-medium flex items-center gap-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+            點擊照片可放大討論
+          </span>
         </div>
 
-        <!-- 建議 2 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-sky-500/50 transition">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center border border-sky-400/30">2</span>
-            <h4 class="font-bold text-base text-white">展示廚房排煙破局方案：直上原廠冷凝罩</h4>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            設計師將中島放在臨大門右側，如果硬拉排油煙風管到後天井，管線長達 14 米，風阻極大且吊頂會嚴重壓迫空間感。<br>
-            <strong class="text-sky-300">阿噗建議：</strong> 展示蒸烤箱選配「RATIONAL 原廠 UltraVent 冷凝吸氣罩」，無須外接排煙管，蒸氣異味內部水冷循環過濾，兼顧省工程款、低噪音與天花板美觀！
-          </p>
+        <!-- 照片網格容器 (JS 動態插入) -->
+        <div id="photos-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <!-- 動態照片卡片 -->
         </div>
-
-        <!-- 建議 3 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-sky-500/50 transition">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center border border-sky-400/30">3</span>
-            <h4 class="font-bold text-base text-white">會議室加裝「長虹玻璃拉門」，實現動靜隔離</h4>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            原圖多功能空間為全開放式。但當右側展示廚房有客戶試吃、咖啡機磨豆，或維修室在試車時，辦公與會議將受到干擾。<br>
-            <strong class="text-indigo-300">阿噗建議：</strong> 沿著梯間柱位加裝「黑色細鋁框＋長虹隔音清玻璃四連動拉門」。平常全開採光無敵；重要會議拉上隔音 35dB，商務洽談更有隱蔽性與儀式感。
-          </p>
-        </div>
-
-        <!-- 建議 4 -->
-        <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-sky-500/50 transition">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 font-bold flex items-center justify-center border border-sky-400/30">4</span>
-            <h4 class="font-bold text-base text-white">維修室空壓機「外移後陽台」，室內無震動</h4>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            設備維修必定頻繁使用高壓空氣噴槍（吹除電控板粉塵、清潔管路）。若空壓機放在室內，打氣啟動噪音極度刺耳。<br>
-            <strong class="text-amber-300">阿噗建議：</strong> 將空壓機主機安裝在後陽台天井，後陽台有專用排水與防雨採光罩，僅將高壓 PU 氣管穿牆配管至維修桌，室內安靜舒適。
-          </p>
-        </div>
-
-        <!-- 建議 5 (全寬) -->
-        <div class="md:col-span-2 bg-slate-800/80 border border-slate-700 rounded-xl p-5 hover:border-emerald-500/50 transition">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center border border-emerald-400/30">5</span>
-            <h4 class="font-bold text-base text-white">物流通道防呆：走廊門洞淨寬鎖定 95cm 以上無門檻</h4>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed">
-            商用蒸烤箱木箱包裝寬度常達 85-90cm，若中央走廊或倉庫門框依傳統室內門（75-80cm）施作，將發生「設備進不去倉庫」的重大慘劇！<br>
-            <strong class="text-emerald-300">阿噗建議：</strong> 從大門口、中島旁通道、中央走道、至倉庫與維修室的門洞，嚴格要求泥作與木作<strong>「門洞淨寬不得低於 95cm」</strong>，且全室室內地坪嚴格保持<strong>「零門檻、無高低落差」</strong>，讓油壓升降台車一人即可順暢推運！
-          </p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- 6. 老闆決策模擬試算器 (Boss Decision Simulator) -->
-    <section id="decision-simulator" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
-      <div class="mb-6">
-        <span class="text-xs font-bold tracking-wider uppercase text-sky-600">Decision Simulator</span>
-        <h3 class="text-2xl font-bold text-slate-900 mt-1">方案評估模擬器：A 方案 (阿噗推薦) vs B 方案 (傳統施工)</h3>
-        <p class="text-sm text-slate-500 mt-1">點選切換不同決策方案，即時評估工程造價、施工工期與營運後遺症風險。</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- 方案 A -->
-        <div class="rounded-2xl border-2 border-sky-500 bg-sky-50/30 p-6 relative flex flex-col justify-between">
-          <div class="absolute -top-3.5 right-6 px-3 py-0.5 rounded-full bg-sky-600 text-white text-xs font-bold shadow">
-            ★ 推薦優選方案 A
-          </div>
-
-          <div>
-            <h4 class="text-lg font-black text-slate-900">方案 A：現代化原廠冷凝 + 隔音拉門方案</h4>
-            <p class="text-xs text-slate-600 mt-1">原廠 UltraVent 冷凝除煙罩 + 長虹隔音玻璃拉門 + 三相四線重電申請 + 空壓機外移天井</p>
-
-            <div class="mt-4 space-y-2.5 text-xs">
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-sky-100">
-                <span class="text-slate-600">排煙方式</span>
-                <span class="font-bold text-sky-700">UltraVent 原廠水冷冷凝罩（免排風管）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-sky-100">
-                <span class="text-slate-600">會議隱私</span>
-                <span class="font-bold text-sky-700">長虹玻璃隔音連動拉門（隔音35dB）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-sky-100">
-                <span class="text-slate-600">噪音抑制</span>
-                <span class="font-bold text-sky-700">空壓機外移後陽台，室內全靜音</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-sky-100">
-                <span class="text-slate-600">工期評估</span>
-                <span class="font-bold text-emerald-700">約 40-45 天（免吊頂穿牆風管工程）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-white border border-sky-100">
-                <span class="text-slate-600">二次改裝風險</span>
-                <span class="font-bold text-emerald-700">極低（動線與設備規格一次到位）</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-sky-100">
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-800">
-              <svg class="w-4 h-4 text-sky-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-              總評：初期設備費用微幅增加，但省下高額風管吊頂木作，維修體驗佳！
-            </span>
-          </div>
+      <!-- 位置規劃討論重點 -->
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="w-2 h-4 bg-sky-600 rounded-full"></span>
+          <h4 class="text-sm font-bold text-slate-900">💬 位置規劃討論重點（老闆決策審查）</h4>
         </div>
 
-        <!-- 方案 B -->
-        <div class="rounded-2xl border border-slate-200 bg-white p-6 relative flex flex-col justify-between">
-          <div>
-            <h4 class="text-lg font-bold text-slate-800">方案 B：傳統施工方案</h4>
-            <p class="text-xs text-slate-500 mt-1">天花板吊頂拉 14米排煙管 + 會議室全開放 + 一般單相電 + 空壓機放室內</p>
-
-            <div class="mt-4 space-y-2.5 text-xs">
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span class="text-slate-600">排煙方式</span>
-                <span class="font-medium text-rose-700">吊頂排油煙管長達 14米（風阻大、積油垢難清）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span class="text-slate-600">會議隱私</span>
-                <span class="font-medium text-amber-700">全開放式（廚房料理與出餐時受干擾）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span class="text-slate-600">噪音抑制</span>
-                <span class="font-medium text-rose-700">空壓機放室內，頻繁打氣噪音刺耳</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span class="text-slate-600">工期評估</span>
-                <span class="font-medium text-amber-700">約 55-60 天（需泥作穿牆與長風管施工）</span>
-              </div>
-              <div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                <span class="text-slate-600">二次改裝風險</span>
-                <span class="font-medium text-rose-700">高（日後客人嫌吵或油煙排不出時需重改）</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-slate-100">
-            <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500">
-              ⚠️ 總評：看似省初期設備費，但長風管維護與噪音干擾將成為營運隱患。
-            </span>
-          </div>
+        <div id="discussion-points" class="space-y-2.5 text-xs sm:text-sm text-slate-700">
+          <!-- 動態討論重點 -->
         </div>
-
       </div>
-    </section>
 
-    <!-- 頁尾宣告與版權 -->
-    <footer class="pt-6 pb-12 border-t border-slate-200 text-center text-xs text-slate-500 space-y-2">
-      <p>專案名稱：空間設計規劃案（30坪複合展示與維修營運基地）｜報告編製：專屬 AI 助理「阿噗」</p>
-      <p class="text-slate-400">專案文件已同步寫入 Obsidian 第二大腦與本地 Git 版控庫。本報告供內部決策參考，尺寸與設備規格依現場最終施工圖為準。</p>
-    </footer>
+    </div>
 
   </main>
 
-  <!-- 照片燈箱彈窗 (Lightbox Modal) -->
-  <div id="photo-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4" onclick="closePhotoModal()">
-    <div class="relative max-w-4xl w-full bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-700" onclick="event.stopPropagation()">
-      <div class="p-4 bg-slate-800 text-white flex items-center justify-between border-b border-slate-700">
-        <h5 id="modal-title" class="font-bold text-sm">現場照片檢視</h5>
-        <button onclick="closePhotoModal()" class="w-8 h-8 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition">✕</button>
+  <!-- 照片全螢幕燈箱放大 Modal -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" onclick="closeLightbox()">
+    <div class="relative max-w-5xl w-full bg-slate-950 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 flex flex-col max-h-[92vh]" onclick="event.stopPropagation()">
+      
+      <!-- 燈箱頂部工具列 -->
+      <div class="px-4 py-3 bg-slate-900/90 text-white flex items-center justify-between border-b border-slate-800">
+        <div>
+          <h5 id="lightbox-title" class="font-bold text-sm text-slate-200">現場照片放大檢視</h5>
+          <span id="lightbox-counter" class="text-[11px] text-slate-400">1 / 5</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[11px] text-slate-400 hidden sm:inline">可用鍵盤 ← → 切換，ESC 關閉</span>
+          <button onclick="closeLightbox()" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition">
+            ✕
+          </button>
+        </div>
       </div>
-      <div class="p-2 bg-black flex items-center justify-center max-h-[75vh] overflow-hidden">
-        <img id="modal-img" src="" alt="照片放大" class="max-h-[72vh] w-auto object-contain rounded">
+
+      <!-- 燈箱圖片本體 -->
+      <div class="relative flex-1 bg-black flex items-center justify-center overflow-hidden min-h-[300px] p-2">
+        <img id="lightbox-img" src="" alt="放大照片" class="max-h-[68vh] w-auto max-w-full object-contain rounded select-none">
+
+        <!-- 上一張按鈕 -->
+        <button onclick="prevPhoto()" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-lg shadow-lg border border-slate-700 hover:scale-110 transition">
+          ‹
+        </button>
+
+        <!-- 下一張按鈕 -->
+        <button onclick="nextPhoto()" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-slate-900/70 hover:bg-slate-900 text-white flex items-center justify-center text-lg shadow-lg border border-slate-700 hover:scale-110 transition">
+          ›
+        </button>
+      </div>
+
+      <!-- 燈箱照片註解 -->
+      <div class="px-5 py-3 bg-slate-900 text-xs sm:text-sm text-slate-300 border-t border-slate-800 flex items-center justify-between">
+        <p id="lightbox-caption" class="leading-relaxed"></p>
       </div>
     </div>
   </div>
 
-  <!-- 互動腳本 -->
+  <!-- 資料庫與互動邏輯腳本 -->
   <script>
-    // 區域資料庫
     const zonesData = {
       kitchen: {
         id: 'kitchen',
+        navId: 'nav-kitchen',
         pinId: 'pin-kitchen',
-        btnId: 'btn-kitchen',
-        title: '🍽️ 展示體驗廚房 (Showroom Kitchen)',
-        badge: '核心亮點・商用示範',
-        badgeColor: 'bg-sky-50 text-sky-700 border-sky-200',
-        area: '約 9.6 坪（進門右側架高地板區）',
-        status: '現況為通訊行舊玻璃櫃與凹槽板，待清空拆除。',
-        desc: '本區是踏入基地的第一視覺焦點！設計規劃為「高規格中島吧台 + 商用蒸烤箱展示高櫃」，可支援 4-6 人近距離料理試菜與設備實機操作培訓。',
-        specs: [
-          { label: '重要設備', val: 'RATIONAL iCombi Pro 蒸烤箱、Pacojet 4、急速冷凍櫃、中島大功率感應爐' },
-          { label: '水電規範', val: '三相 380V 重電、單相 220V 專用迴路、前置軟水淨水系統、小型截油槽' },
-          { label: '工程特色', val: '架高木地板 (約15-20cm)，不用破壞原地面即可將給排水與重電線槽隱形收整' }
+        icon: '🍽️',
+        title: '1. 展示體驗廚房（Demo Kitchen）',
+        location: '位置：入門右側架高地板區｜約 9.6 坪',
+        tag: '核心視覺亮點',
+        summary: '進門第一視覺焦點。規劃斜角中島吧台與廚具設備展示高櫃，用於商用萬能蒸烤箱 (RATIONAL iCombi Pro)、微磨機 (Pacojet 4)、急速冷凍櫃等設備的料理展演與客戶試吃。',
+        photos: [
+          { src: './assets/site_photos/316073_0.jpg', title: '前展區全景（中島吧台預定地）', desc: '現況天花板高挑平整，地面為木紋塑膠地板。兩側為通訊行舊矮櫃，中央可見箱裝設備。' },
+          { src: './assets/site_photos/316544_0.jpg', title: '右側長達 6 米展示背牆', desc: '原手機配件凹槽板背牆。設計師規劃為「廚具設備展示高櫃」，放置蒸烤箱與嵌入式設備。' },
+          { src: './assets/site_photos/316535_0.jpg', title: '大門右側配電箱與展示櫃現況', desc: '進門右壁為主要配電箱，通往中島與設備高櫃之重電走線極短，非常省工程線材！' },
+          { src: './assets/site_photos/316542_0.jpg', title: '展示櫃深處與天花板燈口', desc: '天花板已有盒燈與嵌燈孔位，拆除舊櫃後可加裝軌道投射燈照射料理中島。' },
+          { src: './assets/site_photos/316099_0.jpg', title: '展示區銜接中央走廊處', desc: '右側展示櫃延伸至後方走道入口，動線開闊，客戶可環繞中島參觀。' }
         ],
-        advice: '💡 阿噗建議：蒸烤箱上方直上原廠 UltraVent 冷凝除煙罩，可省去長達 14 米的排風管工程，大幅降低噪音與施工成本。'
+        discussions: [
+          '🎯 <strong>位置優勢</strong>：緊鄰正面大落地窗，從騎樓一眼就能看到精緻的中島料理展演，品牌吸睛效果極強。',
+          '⚡ <strong>水電管線</strong>：此區採用「架高木地板（約15-20cm）」，能將 380V 重電線槽、給水軟水管與排水管隱形藏於地板下方，完全不必打敲原地磚。',
+          '🗣️ <strong>建議討論重點</strong>：蒸烤箱建議選配原廠 <strong>UltraVent 冷凝除煙罩</strong>，免拉長達 14 米的排風管到後方，大幅降低噪音與施工開銷。'
+        ]
       },
       office: {
         id: 'office',
+        navId: 'nav-office',
         pinId: 'pin-office',
-        btnId: 'btn-office',
-        title: '💼 辦公與多功能會議室 (Office & Meeting)',
-        badge: '商務談判・內部研討',
-        badgeColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        area: '約 7.5 坪（進門左側多功能區）',
-        status: '現況地坪為平整木紋磚，採光佳，原通訊行壁面待油漆翻新。',
-        desc: '作為業務簽約、內部會議與行政辦公的核心空間。設計師規劃 6-8 人會議長桌與深處獨立辦公桌，搭配整面文件展示收納櫃。',
-        specs: [
-          { label: '重要設備', val: '75吋 4K 智慧商用顯示器、Logitech Rally 視訊設備、電動嵌入式集線盒' },
-          { label: '水電規範', val: '110V 獨立雙迴路（防跳電）、Cat6 雙實體網路線、Wi-Fi 6 漫遊 AP' },
-          { label: '工程特色', val: '會議桌面內嵌隱藏線槽，簡報投屏線路完全隱藏' }
+        icon: '💼',
+        title: '2. 辦公與多功能會議室（Office & Meeting）',
+        location: '位置：入門左側多功能區｜約 7.5 坪',
+        tag: '商務談判・內部辦公',
+        summary: '作為業務簽約、內部會議、遠端視訊與日常辦公的核心空間。設計師規劃 6-8 人會議長桌與深處獨立辦公桌，搭配文件展示收納櫃。',
+        photos: [
+          { src: './assets/site_photos/316075_0.jpg', title: '前區望向大門採光（會議桌預定位）', desc: '大門左側空間，自然採光充足，地坪平整，適合作為接待大桌與會議簡報區。' },
+          { src: './assets/site_photos/316074_0.jpg', title: '前區左側與中島過渡視角', desc: '空間左右分流清晰，左邊洽談、右邊烹飪，中間保持開闊動線。' },
+          { src: './assets/site_photos/316547_0.jpg', title: '左側深處辦公桌預定區', desc: '靠近電梯間牆面，環境相對安靜，適合作為主管與行政同仁日常辦公工位。' },
+          { src: './assets/site_photos/316085_0.jpg', title: '左側收納展示櫃現況', desc: '壁面可規劃落地資料櫃與 75 吋簡報顯示器投影牆。' }
         ],
-        advice: '💡 阿噗建議：強烈建議增設「黑色鋁框長虹隔音拉門」，開會時拉上即可阻隔廚房試菜與後台雜音，商務私密性極高。'
+        discussions: [
+          '🎯 <strong>位置優勢</strong>：與展示廚房左右分立，進門客戶自然分流，商談與烹飪互不卡位。',
+          '🗣️ <strong>建議討論重點（重要！）</strong>：原圖為全開放設計。當廚房試菜或後台維修有聲音時，開會容易受干擾。<strong>強烈建議加裝「黑色細鋁框長虹玻璃拉門」</strong>，開會拉上隔音、平時拉開通透！',
+          '💻 <strong>設備需求</strong>：會議桌預留內嵌集線盒（HDMI、Type-C 快充、110V 插座、實體網路孔）。'
+        ]
       },
       repair: {
         id: 'repair',
+        navId: 'nav-repair',
         pinId: 'pin-repair',
-        btnId: 'btn-repair',
-        title: '🔧 專業設備維修室 (Repair Workshop)',
-        badge: '技術後盾・原廠保修',
-        badgeColor: 'bg-amber-50 text-amber-700 border-amber-200',
-        area: '約 5.4 坪（後方左側獨立隔間，原茶水間）',
-        status: '現況有地排與水龍頭，對外窗通風良好，緊鄰獨立衛浴與後陽台。',
-        desc: '專業餐飲設備的售後維修核心！規劃專用不鏽鋼重型工作台、金屬工具掛牆、試機配電箱與深槽洗滌池。有實體門可關閉，雜亂不外露。',
-        specs: [
-          { label: '重要設備', val: '500kg 重型工作台、Pegboard 工具牆、超音波零件清洗槽、多電壓測試盤' },
-          { label: '水電規範', val: '多電壓測試插座 (110V/220V/380V)、漏電保護開關、急停開關 (E-Stop)' },
-          { label: '工程特色', val: '利用現有給水與地面排水孔，洗滌檢修污水直接排放' }
+        icon: '🔧',
+        title: '3. 專業設備維修室（Service Workshop）',
+        location: '位置：後方左側獨立房間（原茶水間）｜約 5.4 坪',
+        tag: '技術核心・售後保修',
+        summary: '原設計圖標為「儲物茶水間」，但此處有排水孔、對外窗通風門，且緊鄰獨立衛浴與後陽台。阿噗強烈建議將此處定為「專業維修室」，具備實體門可關閉，雜亂不外露。',
+        photos: [
+          { src: './assets/site_photos/316551_0.jpg', title: '維修室獨立空間全景', desc: '方正獨立隔間，地磚乾淨。左側有專用衛浴門，正前方有採光窗與通往後陽台鋁門。' },
+          { src: './assets/site_photos/316059_0.jpg', title: '現成給排水孔與排氣窗', desc: '地面有排水孔與水龍頭，正是測試機器漏水、清洗零件油污的絕佳天然條件！' },
+          { src: './assets/site_photos/316553_0.jpg', title: '維修室專屬獨立衛生間', desc: '技師清洗雙手、更換工作服便利，免去跑到公共區域。' },
+          { src: './assets/site_photos/316554_0.jpg', title: '通往後陽台採光通風門', desc: '可將空壓機主機放置於後陽台，高壓氣管穿牆進入室內，室內無噪音！' }
         ],
-        advice: '💡 阿噗建議：空壓機主機置於後陽台，僅拉高壓氣管入室，室內維修時享受完全靜音，告別空壓機轟鳴。'
+        discussions: [
+          '🎯 <strong>為什麼落位在此？</strong>：維修拆機難免有零件雜物、工具敲擊聲與油水污漬。放在後方獨立房間並有門可關，徹底保障前台專業形象！',
+          '💧 <strong>現成水路優勢</strong>：圖面上此區已有專用水孔與地排，可直接安裝不鏽鋼清洗槽與超音波洗淨機。',
+          '🗣️ <strong>建議討論重點</strong>：在此房內配置多電壓綜合測試配電盤（110V / 220V / 380V），並拉一組氣管通到工作台。'
+        ]
       },
       warehouse: {
         id: 'warehouse',
+        navId: 'nav-warehouse',
         pinId: 'pin-warehouse',
-        btnId: 'btn-warehouse',
-        title: '📦 倉儲物流與備品庫 (Storage & Logistics)',
-        badge: '物流後勤・零配件庫',
-        badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-        area: '約 7.5 坪（後方右側活用空間，長達6.2米）',
-        status: '空間方正深長，原有舊木衣櫃需拆除清空。',
-        desc: '整機庫存與零配件儲備基地。採用重型角鋼架與分類零件櫃，規劃 U 型挑貨動線，門口配置出貨打包與秤重作業台。',
-        specs: [
-          { label: '重要設備', val: '重型角鋼貨架 (單層載重300kg)、分類零件盒櫃、油壓升降搬運台車、電子地秤' },
-          { label: '水電規範', val: '110V 打包設備插座、全光譜均勻高流明平板燈照明' },
-          { label: '工程特色', val: '通道動線挑高 2.8 米，貨架可延伸至頂部最大化收納立方容積' }
+        icon: '📦',
+        title: '4. 倉儲物流備品庫（Storage Warehouse）',
+        location: '位置：後方右側獨立活用空間｜約 7.5 坪',
+        tag: '後勤樞紐・整機備品',
+        summary: '原設計圖標為「活用空間」，縱深達 6.2 米，非常深長方正。規劃為整機設備庫存、原廠維修零件儲備與出貨打包區。',
+        photos: [
+          { src: './assets/site_photos/316548_0.jpg', title: '活用空間全景（縱深長達 6.2 米）', desc: '方正深邃，採光通風良好，地坪為耐磨石英磚，耐重性佳。' },
+          { src: './assets/site_photos/316552_0.jpg', title: '庫房角落與通風窗', desc: '原有木作衣櫃清空後，可整排沿牆架設 2.1 米高免螺絲重型角鋼貨架。' },
+          { src: './assets/site_photos/316077_0.jpg', title: '內部既有高櫃現況', desc: '現有木櫃拆除清空後，將可釋放出極大立方收納容積。' }
         ],
-        advice: '💡 阿噗建議：走廊轉角與庫房門框淨寬必須大於 95cm，地面不可有門檻，確保大型設備手推車能暢行無阻！'
+        discussions: [
+          '🎯 <strong>位置優勢</strong>：長條形空間適合規劃「U 型貨架動線」，兩側放貨架，中間保留 1.2 米拖車走道。',
+          '⚖️ <strong>載重與收納</strong>：配置 4 組單層耐重 300kg 的重型角鋼貨架，搭配抽屜式零件盒收納精密電控板與加熱管。',
+          '🗣️ <strong>建議討論重點（關鍵！）</strong>：商用烤箱打木箱後寬度常達 85-90cm，<strong>倉庫門框淨寬必須要求設計師維持 95cm 以上</strong>，且全室地面不可有門檻！'
+        ]
       },
       entrance: {
         id: 'entrance',
+        navId: 'nav-entrance',
         pinId: 'pin-entrance',
-        btnId: 'btn-entrance',
-        title: '🚪 門面與騎樓進出動線 (Front Entrance)',
-        badge: '第一印象・臨路店面',
-        badgeColor: 'bg-rose-50 text-rose-700 border-rose-200',
-        area: '雙店面面寬（正面寬 8.6 米）',
-        status: '現況有雙捲門與落地玻璃窗，二樓有大型廣告鐵架。',
-        desc: '氣派臨路店面，騎樓寬敞。大面清玻璃帷幕讓路過行人與到訪貴賓能直接看到內部精緻的廚藝展示中島與品牌形象牆。',
-        specs: [
-          { label: '重要設備', val: '門面 LED 發光字招牌、騎樓防眩軌道射燈、大門門禁刷卡系統' },
-          { label: '水電規範', val: '招牌定時器控制迴路、騎樓夜間保全感應燈' },
-          { label: '工程特色', val: '保留既有玻璃門主框，清洗翻新即可大幅節省工程開銷' }
+        icon: '🚪',
+        title: '5. 門面騎樓與進出口（Main Entrance）',
+        location: '位置：臨路一樓店面・正面寬 8.6 米',
+        tag: '第一門面・進出動線',
+        summary: '氣派臨路店面，雙鐵捲門與落地清玻璃帷幕。門前騎樓可臨停貨車裝卸大件設備，亦為客戶到訪第一印象。',
+        photos: [
+          { src: './assets/site_photos/316070_0.jpg', title: '臨路一樓門面全貌', desc: '正面寬闊雙門面，二樓有橫式廣告鐵架，可更換全新企業形象招牌。' },
+          { src: './assets/site_photos/316071_0.jpg', title: '深邃騎樓與落地大玻璃', desc: '大面清玻璃透光度極高，行人從騎樓即可直視內部精緻的廚藝展示中島。' },
+          { src: './assets/site_photos/316072_0.jpg', title: '門口騎樓側景', desc: '門前地磚平整，有利於油壓板車與推車直接推進室內。' },
+          { src: './assets/site_photos/316076_0.jpg', title: '進門自動門與雙捲門現況', desc: '原有鐵捲門與鋁框玻璃門狀態良好，清洗翻新即可繼續沿用。' }
         ],
-        advice: '💡 阿噗建議：門前劃設專屬設備裝卸專用車位，方便物流貨車快速裝卸大型烤箱機台。'
+        discussions: [
+          '🎯 <strong>位置優勢</strong>：雙門面氣派大器，透光性極佳，自然採光能大幅提升展示質感。',
+          '🚛 <strong>裝卸貨便利性</strong>：臨路一樓門面，重型設備進出貨不必走地下室或狹窄電梯。',
+          '🗣️ <strong>建議討論重點</strong>：二樓既有廣告鐵架可直接換裝耐候 LED 發光字形象招牌；玻璃門加裝門禁刷卡機。'
+        ]
+      },
+      corridor: {
+        id: 'corridor',
+        navId: 'nav-corridor',
+        pinId: 'pin-corridor',
+        icon: '🚶',
+        title: '6. 中央過渡走廊（Central Corridor）',
+        location: '位置：前後區樞紐通道｜貫穿展區與後勤區',
+        tag: '物流通道・前後樞紐',
+        summary: '連接前台展示區與後台維修倉儲區的動線命脈。走道地坪鋪設耐磨拋光石英磚，上方設有洗手間標示。',
+        photos: [
+          { src: './assets/site_photos/316100_0.jpg', title: '中央走廊入口視角', desc: '從展區望向後勤區入口，地面為堅固拋光磚，上方為洗手間燈箱。' },
+          { src: './assets/site_photos/316101_0.jpg', title: '走廊中段過渡區', desc: '左側通往維修室與茶水間，右側通往倉庫，兩側預留收納櫃空間。' }
+        ],
+        discussions: [
+          '⚠️ <strong>尺寸防呆（老闆必看）</strong>：此通道是所有大件設備由大門推入倉庫的唯一通道，<strong>走廊淨寬必須保持 100cm 以上</strong>。',
+          '🚫 <strong>無障礙地坪</strong>：走廊與前後各房間交界處嚴禁施作凸起門檻，確保一人即可輕鬆推運重型油壓台車。'
+        ]
+      },
+      backyard: {
+        id: 'backyard',
+        navId: 'nav-backyard',
+        pinId: 'pin-backyard',
+        icon: '🌿',
+        title: '7. 後陽台天井（Backyard & Services）',
+        location: '位置：基地後方防火巷採光天井',
+        tag: '外機設備・通風管路',
+        summary: '狹長型採光天井，上方設有採光罩與通風口。設有地面排水孔與天然瓦斯管線，為空調主機與空壓機的理想安置區。',
+        photos: [
+          { src: './assets/site_photos/316052_0.jpg', title: '後陽台天井走道全景', desc: '上方有防雨採光罩，通風良好，壁面貼二丁掛磁磚，地坪設有排水孔。' },
+          { src: './assets/site_photos/316055_0.jpg', title: '瓦斯管線與過濾水桶放置處', desc: '現有水塔管路與軟水前置設備位置，通風良好無日曬。' }
+        ],
+        discussions: [
+          '🔇 <strong>靜音策略</strong>：設備維修用空壓機主機放置於此，高壓氣管穿牆配管至室內，室內維修無震動轟鳴。',
+          '❄️ <strong>空調外機</strong>：全室分離式冷氣主機可吊掛於此天井牆面，不佔用一樓臨路門面空間。'
+        ]
       }
     };
 
-    // 切換分區顯示
-    function selectZone(zoneKey) {
+    let currentZone = 'kitchen';
+    let currentPhotoIndex = 0;
+
+    // 設定選中區域
+    function setZone(zoneKey) {
       const data = zonesData[zoneKey];
       if (!data) return;
+      currentZone = zoneKey;
 
-      // 更新按鈕樣式
-      document.querySelectorAll('.zone-btn').forEach(btn => {
-        btn.className = 'zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+      // 更新頂部按鈕狀態
+      document.querySelectorAll('.zone-nav-btn').forEach(btn => {
+        btn.className = 'zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-slate-300 hover:text-white hover:bg-slate-700 transition flex items-center gap-1.5';
       });
-      const activeBtn = document.getElementById(data.btnId);
-      if (activeBtn) {
-        activeBtn.className = 'zone-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-300 ring-2 ring-sky-400/20';
+      const activeNav = document.getElementById(data.navId);
+      if (activeNav) {
+        activeNav.className = 'zone-nav-btn whitespace-nowrap px-3 py-1.5 rounded-lg font-bold transition flex items-center gap-1.5 bg-sky-600 text-white shadow ring-2 ring-sky-400/30';
       }
 
-      // 更新平面圖 Pin 樣式
-      document.querySelectorAll('.hotspot-pin').forEach(pin => {
+      // 更新平面圖 Hotspot 狀態
+      document.querySelectorAll('.zone-hotspot').forEach(pin => {
         pin.classList.remove('active');
       });
       const activePin = document.getElementById(data.pinId);
@@ -1071,68 +476,93 @@
         activePin.classList.add('active');
       }
 
-      // 渲染右側詳細面板
-      const container = document.getElementById('zone-details-container');
-      container.innerHTML = `
-        <div class="animate-fadeIn space-y-4">
-          <div class="flex items-center justify-between gap-2">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold border ${data.badgeColor}">
-              ${data.badge}
-            </span>
-            <span class="text-xs font-semibold text-slate-500">${data.area}</span>
-          </div>
+      // 渲染右側資訊
+      document.getElementById('zone-icon').innerText = data.icon;
+      document.getElementById('zone-title').innerText = data.title;
+      document.getElementById('zone-location').innerText = data.location;
+      document.getElementById('zone-tag').innerText = data.tag;
+      document.getElementById('zone-summary').innerText = data.summary;
+      document.getElementById('photo-count-badge').innerText = `${data.photos.length} 張現場照片`;
 
-          <div>
-            <h4 class="text-xl font-black text-slate-900">${data.title}</h4>
-            <p class="text-xs text-slate-500 mt-1">現況盤點：${data.status}</p>
-          </div>
-
-          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
-            ${data.desc}
-          </p>
-
-          <div class="space-y-2">
-            <h5 class="text-xs font-bold text-slate-800 uppercase tracking-wider">設備與基礎規範</h5>
-            <div class="space-y-2">
-              ${data.specs.map(s => `
-                <div class="text-xs bg-white p-2.5 rounded-lg border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-1 shadow-2xs">
-                  <span class="font-semibold text-slate-700">${s.label}</span>
-                  <span class="text-slate-600 sm:text-right max-w-xs">${s.val}</span>
-                </div>
-              `).join('')}
+      // 渲染照片網格
+      const grid = document.getElementById('photos-grid');
+      grid.innerHTML = data.photos.map((p, idx) => `
+        <div class="group bg-slate-50 rounded-xl overflow-hidden border border-slate-200 hover:border-sky-400 hover:shadow-md transition cursor-pointer flex flex-col" onclick="openLightbox(${idx})">
+          <div class="relative aspect-[4/3] bg-slate-200 overflow-hidden">
+            <img src="${p.src}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition flex items-center justify-center">
+              <span class="opacity-0 group-hover:opacity-100 bg-slate-900/80 text-white text-[11px] font-bold px-2 py-1 rounded backdrop-blur-sm transition">
+                🔍 點擊放大
+              </span>
             </div>
           </div>
-
-          <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed font-medium">
-            ${data.advice}
+          <div class="p-2 sm:p-2.5 flex-1 flex flex-col justify-between">
+            <h5 class="text-xs font-bold text-slate-800 line-clamp-1">${p.title}</h5>
+            <p class="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-tight">${p.desc}</p>
           </div>
         </div>
-      `;
+      `).join('');
+
+      // 渲染討論重點
+      const discussContainer = document.getElementById('discussion-points');
+      discussContainer.innerHTML = data.discussions.map(d => `
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5 leading-relaxed">
+          <span class="text-sky-600 mt-0.5">▸</span>
+          <div>${d}</div>
+        </div>
+      `).join('');
     }
 
-    // 彈出照片放大
-    function openPhotoModal(imgSrc, title) {
-      document.getElementById('modal-img').src = imgSrc;
-      document.getElementById('modal-title').innerText = title || '現場照片放大檢視';
-      const modal = document.getElementById('photo-modal');
+    // 燈箱控制
+    function openLightbox(index) {
+      currentPhotoIndex = index;
+      updateLightboxContent();
+      const modal = document.getElementById('lightbox-modal');
       modal.classList.remove('hidden');
       modal.classList.add('flex');
     }
 
-    function closePhotoModal() {
-      const modal = document.getElementById('photo-modal');
+    function closeLightbox() {
+      const modal = document.getElementById('lightbox-modal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
 
-    // 監聽鍵盤 ESC 關閉
+    function updateLightboxContent() {
+      const photos = zonesData[currentZone].photos;
+      if (!photos || photos.length === 0) return;
+      const p = photos[currentPhotoIndex];
+      document.getElementById('lightbox-img').src = p.src;
+      document.getElementById('lightbox-title').innerText = `${zonesData[currentZone].title} — ${p.title}`;
+      document.getElementById('lightbox-counter').innerText = `${currentPhotoIndex + 1} / ${photos.length}`;
+      document.getElementById('lightbox-caption').innerHTML = `<strong>現場重點：</strong>${p.desc}`;
+    }
+
+    function nextPhoto() {
+      const photos = zonesData[currentZone].photos;
+      currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+      updateLightboxContent();
+    }
+
+    function prevPhoto() {
+      const photos = zonesData[currentZone].photos;
+      currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+      updateLightboxContent();
+    }
+
+    // 鍵盤切換支援
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closePhotoModal();
+      const modal = document.getElementById('lightbox-modal');
+      if (!modal.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') nextPhoto();
+        if (e.key === 'ArrowLeft') prevPhoto();
+      }
     });
 
-    // 初始預設選中展示廚房
+    // 預設載入廚房區
     document.addEventListener('DOMContentLoaded', () => {
-      selectZone('kitchen');
+      setZone('kitchen');
     });
   </script>
 </body>
